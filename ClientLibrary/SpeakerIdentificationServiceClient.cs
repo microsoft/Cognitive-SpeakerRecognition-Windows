@@ -82,6 +82,11 @@ namespace Microsoft.ProjectOxford.SpeakerRecognition
         private const string _OPERATION_LOCATION_HEADER = "Operation-Location";
 
         /// <summary>
+        /// The short audio parameter name
+        /// </summary>
+        private const string _SHORT_AUDIO_PARAMETER_NAME = "shortAudio";
+
+        /// <summary>
         /// The default resolver.
         /// </summary>
         private static CamelCasePropertyNamesContractResolver s_defaultResolver = new CamelCasePropertyNamesContractResolver();
@@ -190,16 +195,17 @@ namespace Microsoft.ProjectOxford.SpeakerRecognition
         /// </summary>
         /// <param name="audioStream">The audio stream to identify</param>
         /// <param name="ids">The list of possible speaker profile IDs to identify from</param>
+        /// <param name="forceShortAudio">Force the service to ignore the audio duration restrictions</param>
         /// <exception cref="IdentificationException">Thrown on cases of internal server error, invalid IDs or wrong audio format</exception>
         /// <exception cref="TimeoutException">Thrown in case the connection timed out</exception>
         /// <returns>An object encapsulating the The Url that can be used to query the identification operation status</returns>
-        public async Task<OperationLocation> IdentifyAsync(Stream audioStream, Guid[] ids)
+        public async Task<OperationLocation> IdentifyAsync(Stream audioStream, Guid[] ids, bool forceShortAudio = false)
         {
             try
             {
                 // Construct the request URI
                 string testProfileIds = string.Join(",", ids.Select(id => id.ToString("D")));
-                string requestUri = _IDENTIFICATION_URI + "?identificationProfileIds=" + testProfileIds;
+                string requestUri = _IDENTIFICATION_URI + "?identificationProfileIds=" + testProfileIds + "&" + _SHORT_AUDIO_PARAMETER_NAME + "=" + forceShortAudio.ToString();
                 OperationLocation location = await OperationAsync<IdentificationException>(audioStream, requestUri).ConfigureAwait(false);
                 return location;
             }
@@ -214,15 +220,16 @@ namespace Microsoft.ProjectOxford.SpeakerRecognition
         /// </summary>
         /// <param name="audioStream">The audio stream to use for enrollment</param>
         /// <param name="id">The speaker profile ID to enroll</param>
+        /// <param name="forceShortAudio">Force the service to ignore the audio duration restrictions</param>
         /// <exception cref="EnrollmentException">Thrown in case of invalid audio format, internal server error or an invalid ID</exception>
         /// <exception cref="TimeoutException">Thrown in case the connection timed out</exception>
         /// <returns>The operation location object encapsulating the Url that can be used to check the status of the operation</returns>
-        public async Task<OperationLocation> EnrollAsync(Stream audioStream, Guid id)
+        public async Task<OperationLocation> EnrollAsync(Stream audioStream, Guid id, bool forceShortAudio = false)
         {
             try
             {
                 // Send the request
-                string requestUri = _IDENTIFICATION_PROFILE_URI + "/" + id.ToString("D") + "/enroll";
+                string requestUri = _IDENTIFICATION_PROFILE_URI + "/" + id.ToString("D") + "/enroll?" + _SHORT_AUDIO_PARAMETER_NAME + "=" + forceShortAudio.ToString();
                 OperationLocation location = await OperationAsync<EnrollmentException>(audioStream, requestUri).ConfigureAwait(false);
                 return location;
             }

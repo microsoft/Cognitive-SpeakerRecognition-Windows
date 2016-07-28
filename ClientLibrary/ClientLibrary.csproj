@@ -5,7 +5,7 @@
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D7D070B2-9647-4149-A179-AEC37CC9A25D}</ProjectGuid>
+    <ProjectGuid>{E8EE0C19-C449-4489-869B-6B81F4873B24}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Microsoft.ProjectOxford.SpeakerRecognition</RootNamespace>
