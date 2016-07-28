@@ -88,7 +88,7 @@ namespace Microsoft.ProjectOxford.SpeakerRecognition
         /// </summary>
         /// <param name="audioStream">The audio stream to use for enrollment</param>
         /// <param name="id">The speaker profile ID to enroll</param>
-        /// <param name="forceShortAudio">Instruct the service to waive the recommended minimum audio limit needed for identification</param>
+        /// <param name="forceShortAudio">Instruct the service to waive the recommended minimum audio limit needed for enrollment</param>
         /// <exception cref="EnrollmentException">Thrown in case of invalid audio format, internal server error or an invalid ID</exception>
         /// <returns>An object encapsulating the The Url that can be used to query the enrollment operation status</returns>
         Task<OperationLocation> EnrollAsync(Stream audioStream, Guid id, bool forceShortAudio = false);
