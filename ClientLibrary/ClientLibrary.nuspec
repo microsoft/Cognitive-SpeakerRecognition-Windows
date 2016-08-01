@@ -6,17 +6,18 @@
     <title>$title$</title>
     <authors>Microsoft</authors>
     <owners>Microsoft</owners>
-    <licenseUrl>https://github.com/Microsoft/ProjectOxford-ClientSDK/blob/master/LICENSE.md</licenseUrl>
-    <projectUrl>https://github.com/Microsoft/ProjectOxford-ClientSDK/tree/master/SpeakerRecognition</projectUrl>
-    <iconUrl>https://www.projectoxford.ai/images/bright/spid/SPIDAPI-Main.png</iconUrl>
+    <licenseUrl>https://github.com/Microsoft/Cognitive-SpeakerRecognition-Windows/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/Microsoft/Cognitive-SpeakerRecognition-Windows</projectUrl>
+    <iconUrl>https://portalstoragewu.blob.core.windows.net/media/Default/Media/Speaker%20Recognition/Icons_Speech_Speaker.svg</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <description>$description$</description>
     <summary>Use Speaker Recognition API Client Library to enrich your apps with Microsoft's state-of-the-art cloud-based speaker recognition algorithms.</summary>
-    <releaseNotes>Microsoft Project Oxford Speaker Recognition Client Library.</releaseNotes>
+    <releaseNotes>Add support to the short audio feature. Users can now waive the audio duration requirements for the speaker identification.</releaseNotes>
     <copyright>Copyright (c) 2016</copyright>
     <tags>Project Oxford Speaker Recognition</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="8.0.2" />
+      <dependency id="Newtonsoft.Json" version="9.0.1" />
+      <dependency id="Microsoft.Net.Http" version="2.2.29" />
     </dependencies>
   </metadata>
 </package>
