@@ -124,7 +124,7 @@ namespace SPIDIdentificationAPI_WPF_Samples
                 using (Stream audioStream = File.OpenRead(_selectedFile))
                 {
                     _selectedFile = "";
-                    processPollingLocation = await _serviceClient.EnrollAsync(audioStream, selectedProfiles[0].ProfileId);
+                    processPollingLocation = await _serviceClient.EnrollAsync(audioStream, selectedProfiles[0].ProfileId, ((sender as Button) == _enrollShortAudioBtn));
                 }
 
                 EnrollmentOperation enrollmentResult;

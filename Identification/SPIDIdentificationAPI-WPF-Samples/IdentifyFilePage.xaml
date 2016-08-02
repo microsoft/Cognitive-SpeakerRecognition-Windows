@@ -15,23 +15,32 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.75*"/>
             <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition Width="0.1*"/>
+            <ColumnDefinition Width="0.15*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5, 5, 0, 0" FontWeight="Bold">Identify File</TextBlock>
-        <Frame x:Name="_speakersListFrame" Grid.Row="1" Grid.Column="0" Grid.RowSpan="6" Margin="5, 5, 0, 0" NavigationUIVisibility="Hidden"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" FontWeight="Bold">Step 1: Select Test File</TextBlock>
-        <TextBlock Grid.Row="2" Grid.Column="1" Margin="5, 7, 0, 0">Please click [Load File] to identify the speaker.</TextBlock>
-        <Button x:Name="_loadFileBtn" Grid.Row="2" Grid.Column="2" Margin="5, 5, 5, 0" Content="_Load File" Click="_loadFileBtn_Click"/>
-        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 25, 0, 0" FontWeight="Bold">Step 2: Perform Identification</TextBlock>
-        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0">Select some profiles from the list on the left to identify from.</TextBlock>
-        <TextBlock Grid.Row="5" Grid.Column="1" Margin="5, 7, 0, 0">Click [Identify] to perform the identification.</TextBlock>
-        <Button x:Name="_identifyBtn" Grid.Row="5" Grid.Column="2" Margin="5, 5, 5, 0" Content="_Identify" Click="_identifyBtn_Click" />
-        <StackPanel x:Name="_identificationResultStckPnl" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
+        <Frame x:Name="_speakersListFrame" Grid.Row="1" Grid.Column="0" Grid.RowSpan="7" Margin="5, 5, 0, 0" NavigationUIVisibility="Hidden"/>
+        <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" FontWeight="Bold" TextWrapping="WrapWithOverflow">Step 1: Select Test File</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="1" Margin="5, 7, 0, 0" TextWrapping="WrapWithOverflow">Please click [Load File] to identify the speaker.</TextBlock>
+        <Button x:Name="_loadFileBtn" Grid.Row="2" Grid.Column="2" Margin="5, 5, 5, 0" Click="_loadFileBtn_Click">
+            <TextBlock TextWrapping="WrapWithOverflow" TextAlignment="Center">Load File</TextBlock>
+        </Button>
+        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 25, 0, 0" FontWeight="Bold" TextWrapping="WrapWithOverflow">Step 2: Perform Identification</TextBlock>
+        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" TextWrapping="WrapWithOverflow">Select some profiles from the list on the left to identify from.</TextBlock>
+        <TextBlock Grid.Row="5" Grid.Column="1" Margin="5, 7, 0, 0" TextWrapping="WrapWithOverflow">Click [Identify] to perform the identification.</TextBlock>
+        <Button x:Name="_identifyBtn" Grid.Row="5" Grid.Column="2" Margin="5, 5, 5, 0" Click="_identifyBtn_Click">
+            <TextBlock TextWrapping="WrapWithOverflow" TextAlignment="Center">Identify</TextBlock>
+        </Button>
+        <TextBlock Grid.Row="6" Grid.Column="1" Margin="5, 7, 0, 0" TextWrapping="WrapWithOverflow">Or, click [Identify Short Audio] to skip the identification duration requirement.</TextBlock>
+        <Button x:Name="_identifyShortAudioBtn" Grid.Row="6" Grid.Column="2" Margin="5, 5, 5, 0" Click="_identifyBtn_Click">
+            <TextBlock TextWrapping="WrapWithOverflow" TextAlignment="Center">Identify Short Audio</TextBlock>
+        </Button>
+        <StackPanel x:Name="_identificationResultStckPnl" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="5, 5, 0, 0">Identified speaker:</TextBlock>
                 <TextBlock x:Name="_identificationResultTxtBlk" Margin="5, 5, 0, 0" FontWeight="Bold"/>
