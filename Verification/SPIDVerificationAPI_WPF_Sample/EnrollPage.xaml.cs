@@ -202,10 +202,21 @@ namespace SPIDVerificationAPI_WPF_Sample
         /// <param name="e">Event arguments object</param>
         private void record_Click(object sender, RoutedEventArgs e)
         {
-            record.IsEnabled = false;
-            stopRecord.IsEnabled = true;
-            _waveIn.StartRecording();
-            setStatus("Recording...");
+            try
+            {
+                if (WaveIn.DeviceCount == 0)
+                {
+                    throw new Exception("Cannot detect microphone.");
+                }
+                _waveIn.StartRecording();
+                record.IsEnabled = false;
+                stopRecord.IsEnabled = true;
+                setStatus("Recording...");
+            }
+            catch(Exception ge)
+            {
+                setStatus("Error: " + ge.Message);
+            }
         }
 
         /// <summary>
