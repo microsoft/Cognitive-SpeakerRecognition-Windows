@@ -129,7 +129,7 @@ namespace SPIDVerificationAPI_WPF_Sample
                 _stream = new IgnoreDisposeStream(new MemoryStream());
                 _fileWriter = new WaveFileWriter(_stream, _waveIn.WaveFormat);
             }
-            _fileWriter.WriteData(e.Buffer, 0, e.BytesRecorded);
+            _fileWriter.Write(e.Buffer, 0, e.BytesRecorded);
         }
 
         /// <summary>
