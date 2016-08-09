@@ -54,6 +54,7 @@ namespace SPIDVerificationAPI_WPF_Sample
         private string _subscriptionKey;
         private Guid _speakerId = Guid.Empty;
         private int _remainingEnrollments;
+        private const int maxRemainingEnrollments = 3;
         private WaveIn _waveIn;
         private WaveFileWriter _fileWriter;
         private Stream _stream;
@@ -106,14 +107,15 @@ namespace SPIDVerificationAPI_WPF_Sample
                 setStatus("Using profile Id: " + _speakerId.ToString());
                 refreshPhrases();
                 string enrollmentsStatus = _storageHelper.readValue(MainWindow.SPEAKER_ENROLLMENTS);
-                if ((enrollmentsStatus != null) && (!enrollmentsStatus.Equals("3")))
+                string maxRemainingEnrollmentsText = maxRemainingEnrollments.ToString();
+                if ((enrollmentsStatus != null) && (!enrollmentsStatus.Equals(maxRemainingEnrollmentsText)))
                 {
                     resetBtn.IsEnabled = true;
                 }
                 else
                 {
-                    enrollmentsStatus = "3";
-                    _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, "3");
+                    enrollmentsStatus = maxRemainingEnrollmentsText;
+                    _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, enrollmentsStatus);
                 }
                 remEnrollText.Text = enrollmentsStatus;
                 verPhraseText.Text = _storageHelper.readValue(MainWindow.SPEAKER_PHRASE_FILENAME);
@@ -331,10 +333,11 @@ namespace SPIDVerificationAPI_WPF_Sample
                 setStatus("Profile reset");
                 IsolatedStorageHelper _storageHelper = IsolatedStorageHelper.getInstance();
                 resetBtn.IsEnabled = false;
-                _remainingEnrollments = 3;
-                remEnrollText.Text = "3";
+                string maxRemainingEnrollmentsText = maxRemainingEnrollments.ToString();
+                _remainingEnrollments = maxRemainingEnrollments;
+                remEnrollText.Text = maxRemainingEnrollmentsText;
                 verPhraseText.Text = "Your verification Phrase";
-                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, "3");
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, maxRemainingEnrollmentsText);
                 _storageHelper.writeValue(MainWindow.SPEAKER_PHRASE_FILENAME, "Your verification phrase");
             }
             catch (ResetEnrollmentsException exp)
