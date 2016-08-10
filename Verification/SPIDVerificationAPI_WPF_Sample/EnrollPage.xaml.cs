@@ -54,7 +54,6 @@ namespace SPIDVerificationAPI_WPF_Sample
         private string _subscriptionKey;
         private Guid _speakerId = Guid.Empty;
         private int _remainingEnrollments;
-        private const int maxRemainingEnrollments = 3;
         private WaveIn _waveIn;
         private WaveFileWriter _fileWriter;
         private Stream _stream;
@@ -106,19 +105,20 @@ namespace SPIDVerificationAPI_WPF_Sample
             {
                 setStatus("Using profile Id: " + _speakerId.ToString());
                 refreshPhrases();
-                string enrollmentsStatus = _storageHelper.readValue(MainWindow.SPEAKER_ENROLLMENTS);
-                string maxRemainingEnrollmentsText = maxRemainingEnrollments.ToString();
-                if ((enrollmentsStatus != null) && (!enrollmentsStatus.Equals(maxRemainingEnrollmentsText)))
+
+                Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
+
+                _remainingEnrollments = profile.RemainingEnrollmentsCount;
+                remEnrollText.Text = _remainingEnrollments.ToString();
+                
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, remEnrollText.Text);
+
+                verPhraseText.Text = _storageHelper.readValue(MainWindow.SPEAKER_PHRASE_FILENAME);
+
+                if (profile.EnrollmentsCount != 0)
                 {
                     resetBtn.IsEnabled = true;
                 }
-                else
-                {
-                    enrollmentsStatus = maxRemainingEnrollmentsText;
-                    _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, enrollmentsStatus);
-                }
-                remEnrollText.Text = enrollmentsStatus;
-                verPhraseText.Text = _storageHelper.readValue(MainWindow.SPEAKER_PHRASE_FILENAME);
             }
 
         }
@@ -276,6 +276,16 @@ namespace SPIDVerificationAPI_WPF_Sample
                 IsolatedStorageHelper _storageHelper = IsolatedStorageHelper.getInstance();
                 _storageHelper.writeValue(MainWindow.SPEAKER_FILENAME, response.ProfileId.ToString());
                 _speakerId = response.ProfileId;
+
+                Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
+
+                _remainingEnrollments = profile.RemainingEnrollmentsCount;
+                remEnrollText.Text = _remainingEnrollments.ToString();
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, remEnrollText.Text);
+
+                verPhraseText.Text = "";
+                _storageHelper.writeValue(MainWindow.SPEAKER_PHRASE_FILENAME, "");
+
                 return true;
             }
             catch (CreateProfileException exception)
@@ -333,12 +343,15 @@ namespace SPIDVerificationAPI_WPF_Sample
                 setStatus("Profile reset");
                 IsolatedStorageHelper _storageHelper = IsolatedStorageHelper.getInstance();
                 resetBtn.IsEnabled = false;
-                string maxRemainingEnrollmentsText = maxRemainingEnrollments.ToString();
-                _remainingEnrollments = maxRemainingEnrollments;
-                remEnrollText.Text = maxRemainingEnrollmentsText;
-                verPhraseText.Text = "Your verification Phrase";
-                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, maxRemainingEnrollmentsText);
-                _storageHelper.writeValue(MainWindow.SPEAKER_PHRASE_FILENAME, "Your verification phrase");
+
+                Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
+
+                _remainingEnrollments = profile.RemainingEnrollmentsCount;
+                remEnrollText.Text = _remainingEnrollments.ToString();
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, remEnrollText.Text);
+
+                verPhraseText.Text = "";
+                _storageHelper.writeValue(MainWindow.SPEAKER_PHRASE_FILENAME, "");
             }
             catch (ResetEnrollmentsException exp)
             {
