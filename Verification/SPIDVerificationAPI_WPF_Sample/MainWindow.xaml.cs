@@ -50,9 +50,13 @@ namespace SPIDVerificationAPI_WPF_Sample
         /// </summary>
         public static readonly string SPEAKER_PHRASE_FILENAME = "SpeakerPhrase";
         /// <summary>
-        /// The name of the file that holds the speaker enrollments
+        /// The name of the file that holds the number of remaining enrollments
         /// </summary>
         public static readonly string SPEAKER_ENROLLMENTS = "Enrollments";
+        /// <summary>
+        /// The name of the file that holds the speaker's enrollment status
+        /// </summary>
+        public static readonly string SPEAKER_ENROLLMENT_STATUS = "EnrollmentStatus";
         /// <summary>
         /// Returns the subscription key of the Oxford API
         /// </summary>

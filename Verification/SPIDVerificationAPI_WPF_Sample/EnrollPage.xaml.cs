@@ -100,25 +100,27 @@ namespace SPIDVerificationAPI_WPF_Sample
                 {
                     refreshPhrases();
                 }
+                resetBtn.IsEnabled = false;
             }
             else
             {
                 setStatus("Using profile Id: " + _speakerId.ToString());
                 refreshPhrases();
-
-                Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
-
-                _remainingEnrollments = profile.RemainingEnrollmentsCount;
-                remEnrollText.Text = _remainingEnrollments.ToString();
                 
-                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, remEnrollText.Text);
-
-                verPhraseText.Text = _storageHelper.readValue(MainWindow.SPEAKER_PHRASE_FILENAME);
-
-                if (profile.EnrollmentsCount != 0)
+                string remEnrollments = _storageHelper.readValue(MainWindow.SPEAKER_ENROLLMENTS);
+                if (!Int32.TryParse(remEnrollments, out _remainingEnrollments))
+                {
+                    Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
+                    _remainingEnrollments = profile.RemainingEnrollmentsCount;
+                    _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, _remainingEnrollments.ToString());
+                }
+                string enrollmentStatus = _storageHelper.readValue(MainWindow.SPEAKER_ENROLLMENT_STATUS);
+                if (enrollmentStatus != null && !enrollmentStatus.Equals("Empty"))
                 {
                     resetBtn.IsEnabled = true;
                 }
+                
+                setDisplayText(_remainingEnrollments.ToString(), _storageHelper.readValue(MainWindow.SPEAKER_PHRASE_FILENAME));
             }
 
         }
@@ -180,19 +182,29 @@ namespace SPIDVerificationAPI_WPF_Sample
                 Stopwatch sw = Stopwatch.StartNew();
                 Enrollment response = await _serviceClient.EnrollAsync(audioStream, _speakerId);
                 sw.Stop();
-                _remainingEnrollments = response.RemainingEnrollments;
                 setStatus("Enrollment Done, Elapsed Time: " + sw.Elapsed);
-                verPhraseText.Text = response.Phrase;
-                setStatus("Your phrase: " + response.Phrase);
+
+                _remainingEnrollments = response.RemainingEnrollments;
+                
+                setDisplayText(_remainingEnrollments.ToString(), response.Phrase);
                 setUserPhrase(response.Phrase);
-                remEnrollText.Text = response.RemainingEnrollments.ToString();
+                
+                IsolatedStorageHelper _storageHelper = IsolatedStorageHelper.getInstance();
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, remEnrollText.Text);
+
+                setStatus("Your phrase: " + response.Phrase);
+                
                 if (response.RemainingEnrollments == 0)
                 {
                     MessageBox.Show("You have now completed the minimum number of enrollments. You may perform verification or add more enrollments", "Speaker enrolled");
+                    _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENT_STATUS, "Enrolled");
                 }
+                else
+                {
+                    _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENT_STATUS, "Enrolling");
+                }
+
                 resetBtn.IsEnabled = true;
-                IsolatedStorageHelper _storageHelper = IsolatedStorageHelper.getInstance();
-                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, _remainingEnrollments.ToString());
             }
             catch (EnrollmentException exception)
             {
@@ -261,6 +273,15 @@ namespace SPIDVerificationAPI_WPF_Sample
         }
 
         /// <summary>
+        /// Sets the displayed remaining enrollments number and speaker phrase
+        /// </summary>
+        private void setDisplayText(string remEnrollments, string speakerPhrase)
+        {
+            remEnrollText.Text = remEnrollments;
+            verPhraseText.Text = speakerPhrase;
+        }
+
+        /// <summary>
         /// Creates a speaker profile
         /// </summary>
         /// <returns>A boolean indicating the success/failure of the process</returns>
@@ -278,13 +299,13 @@ namespace SPIDVerificationAPI_WPF_Sample
                 _speakerId = response.ProfileId;
 
                 Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
-
                 _remainingEnrollments = profile.RemainingEnrollmentsCount;
-                remEnrollText.Text = _remainingEnrollments.ToString();
-                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, remEnrollText.Text);
+                
+                setDisplayText(_remainingEnrollments.ToString(), "");
 
-                verPhraseText.Text = "";
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, _remainingEnrollments.ToString());
                 _storageHelper.writeValue(MainWindow.SPEAKER_PHRASE_FILENAME, "");
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENT_STATUS, "Empty");
 
                 return true;
             }
@@ -345,13 +366,13 @@ namespace SPIDVerificationAPI_WPF_Sample
                 resetBtn.IsEnabled = false;
 
                 Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
-
                 _remainingEnrollments = profile.RemainingEnrollmentsCount;
-                remEnrollText.Text = _remainingEnrollments.ToString();
-                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, remEnrollText.Text);
+                
+                setDisplayText(_remainingEnrollments.ToString(), "");
 
-                verPhraseText.Text = "";
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, _remainingEnrollments.ToString());
                 _storageHelper.writeValue(MainWindow.SPEAKER_PHRASE_FILENAME, "");
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENT_STATUS, "Empty");
             }
             catch (ResetEnrollmentsException exp)
             {
