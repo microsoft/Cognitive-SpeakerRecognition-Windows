@@ -62,26 +62,35 @@ namespace SPIDVerificationAPI_WPF_Sample
         public VerifySpeakerPage()
         {
             InitializeComponent();
-            _subscriptionKey = ((MainWindow)Application.Current.MainWindow).SubscriptionKey;
-            IsolatedStorageHelper _storageHelper = IsolatedStorageHelper.getInstance();
-            string _savedSpeakerId = _storageHelper.readValue(MainWindow.SPEAKER_FILENAME);
-            if (_savedSpeakerId != null)
+            try
             {
-                _speakerId = new Guid(_savedSpeakerId);
-            }
+                _subscriptionKey = ((MainWindow)Application.Current.MainWindow).SubscriptionKey;
+                IsolatedStorageHelper _storageHelper = IsolatedStorageHelper.getInstance();
+                string _savedSpeakerId = _storageHelper.readValue(MainWindow.SPEAKER_FILENAME);
+                if (_savedSpeakerId != null)
+                {
+                    _speakerId = new Guid(_savedSpeakerId);
+                }
 
-            if (_speakerId == Guid.Empty)
-            {
-                ((MainWindow)Application.Current.MainWindow).Log("You need to create a profile and complete enrollments first before verification");
-                recordBtn.IsEnabled = false;
-                stopRecordBtn.IsEnabled = false;
+                if (_speakerId == Guid.Empty)
+                {
+                    ((MainWindow)Application.Current.MainWindow).Log("You need to create a profile and complete enrollments first before verification");
+                    recordBtn.IsEnabled = false;
+                    stopRecordBtn.IsEnabled = false;
+                }
+                else
+                {
+                    initializeRecorder();
+                    _serviceClient = new SpeakerVerificationServiceClient(_subscriptionKey);
+                    string userPhrase = _storageHelper.readValue(MainWindow.SPEAKER_PHRASE_FILENAME);
+                    userPhraseTxt.Text = userPhrase;
+                    stopRecordBtn.IsEnabled = false;
+                }
             }
-            else
+            catch (Exception gexp)
             {
-                initializeRecorder();
-                _serviceClient = new SpeakerVerificationServiceClient(_subscriptionKey);
-                string userPhrase = _storageHelper.readValue(MainWindow.SPEAKER_PHRASE_FILENAME);
-                userPhraseTxt.Text = userPhrase;
+                setStatus("Error: " + gexp.Message);
+                recordBtn.IsEnabled = false;
                 stopRecordBtn.IsEnabled = false;
             }
         }
@@ -129,7 +138,7 @@ namespace SPIDVerificationAPI_WPF_Sample
                 _stream = new IgnoreDisposeStream(new MemoryStream());
                 _fileWriter = new WaveFileWriter(_stream, _waveIn.WaveFormat);
             }
-            _fileWriter.WriteData(e.Buffer, 0, e.BytesRecorded);
+            _fileWriter.Write(e.Buffer, 0, e.BytesRecorded);
         }
 
         /// <summary>
@@ -196,10 +205,21 @@ namespace SPIDVerificationAPI_WPF_Sample
         /// <param name="e">Event arguments object</param>
         private void recordBtn_Click_1(object sender, RoutedEventArgs e)
         {
-            recordBtn.IsEnabled = false;
-            stopRecordBtn.IsEnabled = true;
-            _waveIn.StartRecording();
-            setStatus("Recording...");
+            try
+            {
+                if (WaveIn.DeviceCount == 0)
+                {
+                    throw new Exception("Cannot detect microphone.");
+                }
+                _waveIn.StartRecording();
+                recordBtn.IsEnabled = false;
+                stopRecordBtn.IsEnabled = true;
+                setStatus("Recording...");
+            }
+            catch (Exception ge)
+            {
+                setStatus("Error: " + ge.Message);
+            }
         }
     }
 }
