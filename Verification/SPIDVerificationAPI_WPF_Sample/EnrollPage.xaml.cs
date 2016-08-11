@@ -53,7 +53,6 @@ namespace SPIDVerificationAPI_WPF_Sample
     {
         private string _subscriptionKey;
         private Guid _speakerId = Guid.Empty;
-        private int _remainingEnrollments;
         private WaveIn _waveIn;
         private WaveFileWriter _fileWriter;
         private Stream _stream;
@@ -108,6 +107,7 @@ namespace SPIDVerificationAPI_WPF_Sample
                 refreshPhrases();
                 
                 string remEnrollments = _storageHelper.readValue(MainWindow.SPEAKER_ENROLLMENTS);
+                int _remainingEnrollments;
                 if (!Int32.TryParse(remEnrollments, out _remainingEnrollments))
                 {
                     Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
@@ -183,10 +183,8 @@ namespace SPIDVerificationAPI_WPF_Sample
                 Enrollment response = await _serviceClient.EnrollAsync(audioStream, _speakerId);
                 sw.Stop();
                 setStatus("Enrollment Done, Elapsed Time: " + sw.Elapsed);
-
-                _remainingEnrollments = response.RemainingEnrollments;
                 
-                setDisplayText(_remainingEnrollments.ToString(), response.Phrase);
+                setDisplayText(response.RemainingEnrollments.ToString(), response.Phrase);
                 setUserPhrase(response.Phrase);
                 
                 IsolatedStorageHelper _storageHelper = IsolatedStorageHelper.getInstance();
@@ -299,11 +297,10 @@ namespace SPIDVerificationAPI_WPF_Sample
                 _speakerId = response.ProfileId;
 
                 Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
-                _remainingEnrollments = profile.RemainingEnrollmentsCount;
-                
-                setDisplayText(_remainingEnrollments.ToString(), "");
 
-                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, _remainingEnrollments.ToString());
+                setDisplayText(profile.RemainingEnrollmentsCount.ToString(), "");
+
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, profile.RemainingEnrollmentsCount.ToString());
                 _storageHelper.writeValue(MainWindow.SPEAKER_PHRASE_FILENAME, "");
                 _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENT_STATUS, "Empty");
 
@@ -366,11 +363,10 @@ namespace SPIDVerificationAPI_WPF_Sample
                 resetBtn.IsEnabled = false;
 
                 Profile profile = await _serviceClient.GetProfileAsync(_speakerId);
-                _remainingEnrollments = profile.RemainingEnrollmentsCount;
                 
-                setDisplayText(_remainingEnrollments.ToString(), "");
+                setDisplayText(profile.RemainingEnrollmentsCount.ToString(), "");
 
-                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, _remainingEnrollments.ToString());
+                _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENTS, profile.RemainingEnrollmentsCount.ToString());
                 _storageHelper.writeValue(MainWindow.SPEAKER_PHRASE_FILENAME, "");
                 _storageHelper.writeValue(MainWindow.SPEAKER_ENROLLMENT_STATUS, "Empty");
             }
