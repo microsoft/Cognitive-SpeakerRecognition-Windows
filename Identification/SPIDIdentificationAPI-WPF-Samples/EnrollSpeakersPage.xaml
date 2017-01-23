@@ -33,6 +33,7 @@
             <TextBlock Margin="5,9,0,0"><Run Text="Locale"/></TextBlock>
             <ComboBox x:Name="_localeCmb" Margin="5,5,0,0" SelectedIndex="0">
                 <ComboBoxItem Content="en-us"/>
+				<ComboBoxItem Content="zn-ch"/>
             </ComboBox>
         </StackPanel>
         <Button x:Name="_addBtn" Grid.Row="3" Grid.Column="2" Margin="5,5,5,0" Click="_addBtn_Click">
