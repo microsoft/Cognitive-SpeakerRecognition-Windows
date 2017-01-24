@@ -59,12 +59,12 @@ namespace Microsoft.ProjectOxford.SpeakerRecognition
         /// <summary>
         /// Address of the identification profiles API
         /// </summary>
-        private const string _IDENTIFICATION_PROFILE_URI = "https://api.projectoxford.ai/spid/v1.0/identificationProfiles";
+        private const string _IDENTIFICATION_PROFILE_URI = "https://westus.api.cognitive.microsoft.com/spid/v1.0/identificationProfiles";
 
         /// <summary>
         /// Address of the identification API
         /// </summary>
-        private const string _IDENTIFICATION_URI = "https://api.projectoxford.ai/spid/v1.0/identify";
+        private const string _IDENTIFICATION_URI = "https://westus.api.cognitive.microsoft.com/spid/v1.0/identify";
 
         /// <summary>
         /// The header for the subscription key

@@ -53,17 +53,17 @@ namespace Microsoft.ProjectOxford.SpeakerRecognition
         /// <summary>
         /// Address of the verification profiles API
         /// </summary>
-        private const string _BASE_URI = "https://api.projectoxford.ai/spid/v1.0/verificationProfiles";
+        private const string _BASE_URI = "https://westus.api.cognitive.microsoft.com/spid/v1.0/verificationProfiles";
 
         /// <summary>
         /// Address of the verification API
         /// </summary>
-        private const string _VERIFY_ENDPOINT = "https://api.projectoxford.ai/spid/v1.0/verify";
+        private const string _VERIFY_ENDPOINT = "https://westus.api.cognitive.microsoft.com/spid/v1.0/verify";
 
         /// <summary>
         /// Address of the verification phrases API
         /// </summary>
-        private const string _PHRASES_ENDPOINT = "https://api.projectoxford.ai/spid/v1.0/verificationPhrases?locale=";
+        private const string _PHRASES_ENDPOINT = "https://westus.api.cognitive.microsoft.com/spid/v1.0/verificationPhrases?locale=";
 
         /// <summary>
         /// The header for the subscription key
