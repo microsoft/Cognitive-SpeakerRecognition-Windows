@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.ATLC.SDR.ClientCore.Interface.Result;
-using Microsoft.ATLC.SDR.ClientCore.Interface.Audio;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio;
 using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 
-namespace Microsoft.ATLC.SDR.ClientCore.Interface.Client
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Client
 {
     /// <summary>
     /// SDR Client Factory

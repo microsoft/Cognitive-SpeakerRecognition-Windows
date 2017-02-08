@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SPIDStreamingAPI_WPF_Samples.Properties {
+namespace SPIDIdentificationStreaming_WPF_Samples.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SPIDStreamingAPI_WPF_Samples.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SPIDStreamingAPI_WPF_Samples.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SPIDIdentificationStreaming_WPF_Samples.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

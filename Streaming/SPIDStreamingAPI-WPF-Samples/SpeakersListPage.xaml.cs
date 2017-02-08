@@ -40,7 +40,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace SPIDStreamingAPI_WPF_Samples
+namespace SPIDIdentificationStreaming_WPF_Samples
 {
     /// <summary>
     /// Interaction logic for SpeakersListPage.xaml

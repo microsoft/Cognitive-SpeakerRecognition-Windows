@@ -34,7 +34,7 @@
 using SampleUserControlLibrary;
 using System.Windows;
 
-namespace SPIDStreamingAPI_WPF_Samples
+namespace SPIDIdentificationStreaming_WPF_Samples
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -1,5 +1,5 @@
 ﻿
-namespace Microsoft.ATLC.SDR.ClientCore.Audio
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
     // System Namespace
     using System;
@@ -9,7 +9,7 @@ namespace Microsoft.ATLC.SDR.ClientCore.Audio
     using System.Text;
     using System.Threading.Tasks;
 
-    // Microsoft.ATLC.SDR.ClientCore Namespace
+    // Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming Namespace
     using Interface.Audio;
 
     /// <summary>

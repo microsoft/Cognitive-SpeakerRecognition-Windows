@@ -1,5 +1,5 @@
 ﻿
-namespace Microsoft.ATLC.SDR.ClientCore.Client
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
     using Microsoft.ProjectOxford.SpeakerRecognition;
     using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
@@ -10,7 +10,7 @@ namespace Microsoft.ATLC.SDR.ClientCore.Client
     using System.Threading.Tasks;
     using System.Threading;
 
-    // Microsoft.ATLC.SDR.ClientCore Namespace
+    // Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming Namespace
     using Interface.Client;
     using Interface.Result;
     using Interface.Audio;

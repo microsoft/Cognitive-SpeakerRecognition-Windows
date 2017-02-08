@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.ATLC.SDR.ClientCore.Interface.Client;
-using Microsoft.ATLC.SDR.ClientCore.Interface.Result;
-using Microsoft.ATLC.SDR.ClientCore.Result;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Client;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
 using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 using System.Diagnostics;
 
-namespace Microsoft.ATLC.SDR.ClientCore.Client
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
     /// <summary>
     /// Identification client

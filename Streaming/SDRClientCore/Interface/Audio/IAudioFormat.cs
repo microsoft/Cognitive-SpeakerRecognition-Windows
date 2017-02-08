@@ -1,11 +1,11 @@
-﻿using Microsoft.ATLC.SDR.ClientCore.Audio;
+﻿using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microsoft.ATLC.SDR.ClientCore.Interface.Audio
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio
 {
     /// <summary>
     /// Audio codec and container format

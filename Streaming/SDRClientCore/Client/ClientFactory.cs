@@ -1,11 +1,11 @@
-﻿using Microsoft.ATLC.SDR.ClientCore.Interface.Client;
-using Microsoft.ATLC.SDR.ClientCore.Interface.Result;
+﻿using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Client;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result;
 using System;
 using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-using Microsoft.ATLC.SDR.ClientCore.Interface.Audio;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio;
 
-namespace Microsoft.ATLC.SDR.ClientCore.Client
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
     /// <summary>
     /// SDR Client Factory

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 
-namespace Microsoft.ATLC.SDR.ClientCore.Interface.Client
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Client
 {
     /// <summary>
     /// Identification client

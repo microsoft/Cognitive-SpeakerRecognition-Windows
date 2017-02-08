@@ -1,5 +1,5 @@
 ﻿
-namespace Microsoft.ATLC.SDR.ClientCore.Interface.Audio
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio
 {
     using System.Threading.Tasks;
 

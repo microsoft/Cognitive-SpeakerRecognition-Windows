@@ -41,11 +41,11 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.ATLC.SDR.ClientCore.Audio;
-using Microsoft.ATLC.SDR.ClientCore.Client;
-using Microsoft.ATLC.SDR.ClientCore.Interface.Result;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result;
 
-namespace SPIDStreamingAPI_WPF_Samples
+namespace SPIDIdentificationStreaming_WPF_Samples
 {
     /// <summary>
     /// Interaction logic for IdentifyFilePage.xaml

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SPIDStreamingAPI_WPF_Samples.Properties {
+namespace SPIDIdentificationStreaming_WPF_Samples.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

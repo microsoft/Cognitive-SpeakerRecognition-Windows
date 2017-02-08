@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microsoft.ATLC.SDR.ClientCore.Audio
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
     /// <summary>
     /// Types of audio encoding

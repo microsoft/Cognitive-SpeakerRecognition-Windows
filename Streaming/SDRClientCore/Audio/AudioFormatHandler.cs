@@ -1,4 +1,4 @@
-﻿using Microsoft.ATLC.SDR.ClientCore.Interface.Audio;
+﻿using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microsoft.ATLC.SDR.ClientCore.Audio
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
     internal class AudioFormatHandler : IAudioFormatHandler
     {

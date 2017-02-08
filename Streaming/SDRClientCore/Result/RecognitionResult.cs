@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.ATLC.SDR.ClientCore.Interface.Result;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result;
 
-namespace Microsoft.ATLC.SDR.ClientCore.Result
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
 {
     /// <summary>
     /// Identification result

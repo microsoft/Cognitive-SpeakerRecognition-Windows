@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microsoft.ATLC.SDR.ClientCore.Interface.Result
+namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result
 {
     /// <summary>
     /// Identification result
