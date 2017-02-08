@@ -5,11 +5,9 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPIDStreamingAPI-WPF-Samples", "SPIDStreamingAPI-WPF-Samples\SPIDStreamingAPI-WPF-Samples.csproj", "{D4C60FF7-ED2B-4302-B73E-09D01EEFE1B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDRClientCore", "SDRClientCore\SDRClientCore.csproj", "{8A58E960-8D3B-4DA7-A111-270AF62FE812}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.ATLC.SDR.ClientCore", "SDRClientCore\Microsoft.ATLC.SDR.ClientCore.csproj", "{8A58E960-8D3B-4DA7-A111-270AF62FE812}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleUserControlLibrary", "..\Cognitive-Common-Windows\SampleUserControlLibrary\SampleUserControlLibrary.csproj", "{735929F0-F8F1-4D93-B027-5D034FA7892B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPIDStreamingAPI-Samples", "SPIDStreamingAPI-Samples\SPIDStreamingAPI-Samples.csproj", "{AEFFA73E-AC7C-4051-A7F9-758230F98A69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,14 +41,6 @@ Global
 		{735929F0-F8F1-4D93-B027-5D034FA7892B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{735929F0-F8F1-4D93-B027-5D034FA7892B}.Release|x64.ActiveCfg = Release|Any CPU
 		{735929F0-F8F1-4D93-B027-5D034FA7892B}.Release|x64.Build.0 = Release|Any CPU
-		{AEFFA73E-AC7C-4051-A7F9-758230F98A69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AEFFA73E-AC7C-4051-A7F9-758230F98A69}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AEFFA73E-AC7C-4051-A7F9-758230F98A69}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AEFFA73E-AC7C-4051-A7F9-758230F98A69}.Debug|x64.Build.0 = Debug|Any CPU
-		{AEFFA73E-AC7C-4051-A7F9-758230F98A69}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AEFFA73E-AC7C-4051-A7F9-758230F98A69}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AEFFA73E-AC7C-4051-A7F9-758230F98A69}.Release|x64.ActiveCfg = Release|Any CPU
-		{AEFFA73E-AC7C-4051-A7F9-758230F98A69}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

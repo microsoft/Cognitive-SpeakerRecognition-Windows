@@ -30,9 +30,9 @@ namespace Microsoft.ATLC.SDR.ClientCore.Audio
 
         private void ValidateAudioFormat()
         {
-            if(ChannelsNumber < 0)
+            if(ChannelsNumber <= 0)
             {
-                throw new ArgumentException("Channels number can't be a negative number.");
+                throw new ArgumentException("Channels number must be a positive number.");
             }
 
             if (SampleRate < 0)

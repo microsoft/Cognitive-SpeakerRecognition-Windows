@@ -35,6 +35,7 @@ using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -74,7 +75,10 @@ namespace SPIDStreamingAPI_WPF_Samples
         /// <param name="speaker">The speaker profile to add</param>
         public void AddSpeaker(Profile speaker)
         {
-            _speakersListView.Items.Add(speaker);
+            Dispatcher.Invoke((Action)delegate ()
+            {
+                _speakersListView.Items.Add(speaker);
+            });
         }
 
         /// <summary>
@@ -83,30 +87,43 @@ namespace SPIDStreamingAPI_WPF_Samples
         /// <returns>Task to track the status of the asynchronous task.</returns>
         public async Task UpdateAllSpeakersAsync()
         {
-            MainWindow window = (MainWindow)Application.Current.MainWindow;
             try
             {
-                window.Log("Retrieving All Profiles...");
-                Profile[] allProfiles = await _serviceClient.GetProfilesAsync();
-                window.Log("All Profiles Retrieved.");
-                _speakersListView.Items.Clear();
+                LogToMainWindow("Retrieving All Profiles...");
+                Profile[] allProfiles = await _serviceClient.GetProfilesAsync().ConfigureAwait(false);
+                LogToMainWindow("All Profiles Retrieved.");
+
+                Dispatcher.Invoke((Action)delegate ()
+                {
+                    _speakersListView.Items.Clear();
+                });
+
                 foreach (Profile profile in allProfiles)
                     AddSpeaker(profile);
                 _speakersLoaded = true;
             }
             catch (GetProfileException ex)
             {
-                window.Log("Error Retrieving Profiles: " + ex.Message);
+                LogToMainWindow("Error Retrieving Profiles: " + ex.Message);
             }
             catch (Exception ex)
             {
-                window.Log("Error: " + ex.Message);
+                LogToMainWindow("Error: " + ex.Message);
             }
         }
 
         private async void _UpdateBtn_Click(object sender, RoutedEventArgs e)
         {
-            await UpdateAllSpeakersAsync();
+            await UpdateAllSpeakersAsync().ConfigureAwait(false);
+        }
+
+        private void LogToMainWindow(string logString)
+        {
+            Dispatcher.Invoke((Action)delegate ()
+            {
+                MainWindow window = (MainWindow)Application.Current.MainWindow;
+                window.Log(logString);
+            });
         }
 
         /// <summary>
@@ -114,7 +131,7 @@ namespace SPIDStreamingAPI_WPF_Samples
         /// </summary>
         public void SetSingleSelectionMode()
         {
-            _speakersListView.SelectionMode = SelectionMode.Single;
+            _speakersListView.SelectionMode = System.Windows.Controls.SelectionMode.Single;
         }
 
         /// <summary>
@@ -143,9 +160,12 @@ namespace SPIDStreamingAPI_WPF_Samples
         {
             if (_speakersLoaded == false)
             {
-                MainWindow window = (MainWindow)Application.Current.MainWindow;
-                _serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
-                await UpdateAllSpeakersAsync();
+                Dispatcher.Invoke((Action)delegate ()
+                {
+                    MainWindow window = (MainWindow)Application.Current.MainWindow;
+                    _serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
+                });
+                await UpdateAllSpeakersAsync().ConfigureAwait(false);
             }
         }
     }

@@ -71,10 +71,10 @@ namespace SPIDStreamingAPI_WPF_Samples
             try
             {
                 window.Log("Creating Speaker Profile...");
-                CreateProfileResponse creationResponse = await _serviceClient.CreateProfileAsync(_localeCmb.Text);
+                CreateProfileResponse creationResponse = await _serviceClient.CreateProfileAsync(_localeCmb.Text).ConfigureAwait(false);
                 window.Log("Speaker Profile Created.");
                 window.Log("Retrieving The Created Profile...");
-                Profile profile = await _serviceClient.GetProfileAsync(creationResponse.ProfileId);
+                Profile profile = await _serviceClient.GetProfileAsync(creationResponse.ProfileId).ConfigureAwait(false);
                 window.Log("Speaker Profile Retrieved.");
                 SpeakersListPage.SpeakersList.AddSpeaker(profile);
             }
@@ -124,7 +124,7 @@ namespace SPIDStreamingAPI_WPF_Samples
                 using (Stream audioStream = File.OpenRead(_selectedFile))
                 {
                     _selectedFile = "";
-                    processPollingLocation = await _serviceClient.EnrollAsync(audioStream, selectedProfiles[0].ProfileId);
+                    processPollingLocation = await _serviceClient.EnrollAsync(audioStream, selectedProfiles[0].ProfileId).ConfigureAwait(false);
                 }
 
                 EnrollmentOperation enrollmentResult;
@@ -133,7 +133,7 @@ namespace SPIDStreamingAPI_WPF_Samples
                 while(numOfRetries > 0)
                 {
                     await Task.Delay(timeBetweenRetries);
-                    enrollmentResult = await _serviceClient.CheckEnrollmentStatusAsync(processPollingLocation);
+                    enrollmentResult = await _serviceClient.CheckEnrollmentStatusAsync(processPollingLocation).ConfigureAwait(false);
 
                     if (enrollmentResult.Status == Status.Succeeded)
                     {
@@ -150,6 +150,7 @@ namespace SPIDStreamingAPI_WPF_Samples
                     throw new EnrollmentException("Enrollment operation timeout.");
                 }
                 window.Log("Enrollment Done.");
+
                 await SpeakersListPage.SpeakersList.UpdateAllSpeakersAsync();
             }
             catch (EnrollmentException ex)

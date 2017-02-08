@@ -110,7 +110,7 @@ namespace SPIDStreamingAPI_WPF_Samples
                 if (_selectedFile == "")
                     throw new Exception("No File Selected.");
 
-                window.Log("Identifying File...");
+                window.Log("Processing File...");
                 Profile[] selectedProfiles = SpeakersListPage.SpeakersList.GetSelectedProfiles();
                 Guid[] testProfileIds = new Guid[selectedProfiles.Length];
                 for (int i = 0; i < testProfileIds.Length; i++)
@@ -124,7 +124,8 @@ namespace SPIDStreamingAPI_WPF_Samples
                 using (Stream audioStream = new FileStream(_selectedFile, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
                     byte[] m_Bytes = Readbytes(audioStream);
-                    using (var recoClient = new RecognitionClient(recoClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this._serviceClient))
+                    using(var clientfactory = new ClientFactory())
+                    using (var recoClient = clientfactory.CreateRecognitionClient(recoClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this._serviceClient))
                     {
                         for (int i = headerSize; i < m_Bytes.Length; i += bufferSize)
                         {
@@ -151,6 +152,12 @@ namespace SPIDStreamingAPI_WPF_Samples
         {
             mediaPlayer.Source = new Uri(_selectedFile);
             mediaPlayer.Play();
+            _mediaElementStckPnl.Visibility = Visibility.Visible;
+        }
+        
+        private void ChangeMediaVolume(object sender, RoutedPropertyChangedEventArgs<double> args)
+        {
+            mediaPlayer.Volume = (double)volumeSlider.Value;
         }
 
         private void WriteResults(IRecognitionResult identification)

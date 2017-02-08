@@ -56,16 +56,18 @@ namespace Microsoft.ATLC.SDR.ClientCore.Client
                 processPollingLocation = await serviceClient.IdentifyAsync(stream, speakerIds, forceShortAudio: true).ConfigureAwait(false);
 
                 IdentificationOperation identificationResponse = null;
-                int numOfRetries = 10;
-                TimeSpan timeBetweenRetries = TimeSpan.FromSeconds(5.0);
+                int numOfRetries = 2;
+                TimeSpan timeBetweenRetries = TimeSpan.FromSeconds(1.0);
                 while (numOfRetries > 0)
                 {
                     await Task.Delay(timeBetweenRetries);
-                    identificationResponse = await serviceClient.CheckIdentificationStatusAsync(processPollingLocation);
+                    identificationResponse = await serviceClient.CheckIdentificationStatusAsync(processPollingLocation).ConfigureAwait(false);
 
                     if (identificationResponse.Status == Status.Succeeded)
                     {
-                        break;
+                        var result = new RecognitionResult(identificationResponse.ProcessingResult, clientId, requestId);
+                        resultCallback(result);
+                        return;
                     }
                     else if (identificationResponse.Status == Status.Failed)
                     {
@@ -81,10 +83,6 @@ namespace Microsoft.ATLC.SDR.ClientCore.Client
                     resultCallback(failureResult);
                     return;
                 }
-
-                var result = new RecognitionResult(identificationResponse.ProcessingResult, clientId, requestId);
-                resultCallback(result);
-
             }
             catch (Exception ex)
             {

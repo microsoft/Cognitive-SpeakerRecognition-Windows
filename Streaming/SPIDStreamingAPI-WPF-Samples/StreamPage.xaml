@@ -6,7 +6,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
 	Title="StreamPage" Loaded="Page_Loaded">
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -32,10 +32,27 @@
         <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0">Select some profiles from the list on the left to identify from.</TextBlock>
         <TextBlock Grid.Row="5" Grid.Column="1" Margin="5, 7, 0, 0">Click [Stream] to perform the Streaming.</TextBlock>
         <Button x:Name="_streamBtn" Grid.Row="5" Grid.Column="2" Margin="5, 5, 5, 0" Content="_stream" Click="_streamBtn_Click" />
-        <MediaElement x:Name="mediaPlayer" Grid.Row="6" Grid.Column="1" Margin="5, 5, 5, 0" LoadedBehavior="Manual" UnloadedBehavior="Stop" Visibility="Visible" Stretch="Fill">
-        </MediaElement>
+        <StackPanel Grid.Row="6" Grid.Column="1" Height="20">
+        </StackPanel>
+
+        <StackPanel Background="Black" Grid.Row="6" Grid.Column="1" x:Name="_mediaElementStckPnl" Visibility="Hidden" Margin="5, 25, 5, 5" >
+
+            <!-- To interactively stop, pause, and play the media, the LoadedBehavior 
+           property of the MediaElement must be set to "Manual". -->
+            <MediaElement Name="mediaPlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" Stretch="Fill"/>
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+
+                <!-- Volume slider. This slider allows a Volume range between 0 and 1. -->
+                <TextBlock Foreground="White" VerticalAlignment="Center" Margin="5"  >Volume</TextBlock>
+                <Slider Name="volumeSlider" VerticalAlignment="Center" ValueChanged="ChangeMediaVolume" 
+       Minimum="0" Maximum="1" Value="0.5" Width="70"/>
+
+            </StackPanel>
+        </StackPanel>
+
         <StackPanel x:Name="_identificationResultStckPnl" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
-            
+
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="5, 5, 0, 0">Identified speaker:</TextBlock>
                 <TextBlock x:Name="_identificationResultTxtBlk" Margin="5, 5, 0, 0" FontWeight="Bold"/>

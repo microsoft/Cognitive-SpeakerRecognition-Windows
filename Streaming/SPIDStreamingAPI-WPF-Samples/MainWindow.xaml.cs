@@ -59,7 +59,7 @@ namespace SPIDStreamingAPI_WPF_Samples
         {
             InitializeComponent();
 
-            _scenariosControl.SampleTitle = "Speaker Identification Sample";
+            _scenariosControl.SampleTitle = "Speaker Streaming Sample";
             _scenariosControl.SampleScenarioList = new Scenario[]
             {
                 new Scenario{ Title = "Enroll Speakers", PageClass = typeof(EnrollSpeakersPage)},

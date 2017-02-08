@@ -82,6 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\AudioHeaderParsingResult.cs" />
+    <Compile Include="Client\ClientFactory.cs" />
+    <Compile Include="Interface\Client\IClientFactory.cs" />
     <Compile Include="Interface\Client\IIdentificationClient.cs" />
     <Compile Include="Interface\Audio\IAudioFormat.cs" />
     <Compile Include="Interface\Audio\IAudioFormatHandler.cs" />

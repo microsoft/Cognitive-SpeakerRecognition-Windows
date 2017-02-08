@@ -43,7 +43,7 @@ namespace Microsoft.ATLC.SDR.ClientCore.Client
         /// <param name="audioFormat">Audio format</param>
         /// <param name="resultCallback">Value callback action consisted of identification result, client id and request id</param>
         /// <param name="serviceClient">Client used in identifying the streamed audio file</param>
-        public RecognitionClient(Guid clientId, Guid[] speakerIds, int stepSize, int windowSize, IAudioFormat audioFormat, Action<IRecognitionResult> resultCallback, SpeakerIdentificationServiceClient serviceClient)
+        internal RecognitionClient(Guid clientId, Guid[] speakerIds, int stepSize, int windowSize, IAudioFormat audioFormat, Action<IRecognitionResult> resultCallback, SpeakerIdentificationServiceClient serviceClient)
         {
             this.ClientId = clientId;
             this.SpeakerIds = speakerIds;
