@@ -17,7 +17,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
     using Audio;
 
     /// <summary>
-    /// Speaker Diarization and Recognition Client
+    /// Speaker Identification-Streaming and Recognition Client
     /// </summary>
     public class RecognitionClient : IRecognitionClient
     {

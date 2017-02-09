@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
+    /// <summary>
+    /// Handles audio formats, and parses header
+    /// </summary>
     internal class AudioFormatHandler : IAudioFormatHandler
     {
         /// <summary>

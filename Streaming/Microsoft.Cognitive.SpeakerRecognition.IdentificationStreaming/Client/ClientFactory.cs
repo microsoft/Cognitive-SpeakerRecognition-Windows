@@ -8,12 +8,12 @@ using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.A
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
     /// <summary>
-    /// SDR Client Factory
+    /// Identification-Streaming Client Factory
     /// </summary>
     public class ClientFactory : IClientFactory
     {
         /// <summary>
-        /// Creates new SDR recognition client
+        /// Creates new identification-streaming recognition client
         /// </summary>
         /// <param name="clientId">Id associated with all requests related to this client</param>
         /// <param name="speakerIds">Speaker ids for recognition</param>

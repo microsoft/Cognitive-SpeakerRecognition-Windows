@@ -11,12 +11,12 @@ using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Client
 {
     /// <summary>
-    /// SDR Client Factory
+    /// Identification-Streaming Client Factory
     /// </summary>
     public interface IClientFactory : IDisposable
     {
         /// <summary>
-        /// Creates new SDR recognition client
+        /// Creates new identification-streaming recognition client
         /// </summary>
         /// <param name="clientId">Id associated with all requests related to this client</param>
         /// <param name="speakerIds">Speaker ids for recognition</param>
