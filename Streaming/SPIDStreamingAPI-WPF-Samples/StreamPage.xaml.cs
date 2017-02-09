@@ -35,6 +35,7 @@ using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 using Microsoft.Win32;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
@@ -53,10 +54,6 @@ namespace SPIDIdentificationStreaming_WPF_Samples
     public partial class StreamPage : Page
     {
         private string _selectedFile = "";
-        private static readonly int headerSize = 44;
-        private static readonly int bufferSize = 32000;
-        private static readonly int windowSize = 5;
-        private static readonly int stepSize = 1;
 
         private SpeakerIdentificationServiceClient _serviceClient;
 
@@ -90,15 +87,6 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             _selectedFile = openFileDialog.FileName;
         }
 
-        private byte[] Readbytes(Stream input)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                input.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
-
         private async void _streamBtn_Click(object sender, RoutedEventArgs e)
         {
             MainWindow window = (MainWindow)Application.Current.MainWindow;
@@ -107,6 +95,17 @@ namespace SPIDIdentificationStreaming_WPF_Samples
 
             try
             {
+                // Window size in seconds
+                int windowSize = int.Parse(ConfigurationManager.AppSettings["WindowSize"]);
+
+                // Amount of seconds needed for sending a request to server
+                // If set to 1, the client will send a request to the server for every second recieved from the user
+                // If set to 2, the client will send a request to the server for every 2 seconds recieved from the user
+                int stepSize = int.Parse(ConfigurationManager.AppSettings["StepSize"]);
+
+                // Delay between passing audio chunks to the client in milliseconds
+                int requestDelay = int.Parse(ConfigurationManager.AppSettings["RequestsDelay"]);
+
                 if (_selectedFile == "")
                     throw new Exception("No File Selected.");
 
@@ -118,23 +117,36 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                     testProfileIds[i] = selectedProfiles[i].ProfileId;
                 }
 
+                // Unique id of the recognition client. Returned in the callback to relate results with clients in case of having several clients using the same callback
+                var recognitionClientId = Guid.NewGuid();
 
-                var recoClientId = Guid.NewGuid();
-                var audioFormat = new AudioFormat(AudioEncoding.PCM, 1, 16000, 16, new AudioContainer(AudioContainerType.RAW));
-                using (Stream audioStream = new FileStream(_selectedFile, FileMode.Open, FileAccess.Read, FileShare.Read))
+                // Audio format of the recognition audio
+                // Supported containers: WAV and RAW (no header)
+                // Supported format: Encoding = PCM, Channels = Mono (1), Rate = 16k, Bits per sample = 16
+                var audioFormat = new AudioFormat(AudioEncoding.PCM, 1, 16000, 16, new AudioContainer(AudioContainerType.WAV));
+                using (Stream audioStream = File.OpenRead(_selectedFile))
                 {
-                    byte[] m_Bytes = Readbytes(audioStream);
-                    using(var clientfactory = new ClientFactory())
-                    using (var recoClient = clientfactory.CreateRecognitionClient(recoClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this._serviceClient))
+                    // Client factory is used to create a recognition client
+                    // Recognition client can be used for one audio only. In case of having several audios, a separate client should be created for each one
+                    using (var clientfactory = new ClientFactory())
+                    using (var recognitionClient = clientfactory.CreateRecognitionClient(recognitionClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this._serviceClient))
                     {
-                        for (int i = headerSize; i < m_Bytes.Length; i += bufferSize)
+                        var chunkSize = 32000;
+                        var buffer = new byte[chunkSize];
+                        var bytesRead = 0;
+
+                        while ((bytesRead = audioStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
-                            var buffer = m_Bytes.Skip(i).Take(Math.Min(bufferSize, m_Bytes.Length - i)).ToArray();
-                            await recoClient.StreamAudioAsync(buffer).ConfigureAwait(false);
-                            await Task.Delay(1000);
+                            // You can send any number of bytes not limited to 1 second
+                            // If the remaining bytes of the last request are smaller than 1 second, it gets ignored
+                            await recognitionClient.StreamAudioAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+
+                            // Simulates live streaming
+                            // It's recommended to use a delay greater than 200 ms to guarantee receiving responses in the correct order
+                            await Task.Delay(requestDelay);
                         }
-                        await Task.Delay(10000);
-                        await recoClient.EndStreamAudioAsync().ConfigureAwait(false);
+
+                        await recognitionClient.EndStreamAudioAsync().ConfigureAwait(false);
                     }
                 }
             }
@@ -154,7 +166,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             mediaPlayer.Play();
             _mediaElementStckPnl.Visibility = Visibility.Visible;
         }
-        
+
         private void ChangeMediaVolume(object sender, RoutedPropertyChangedEventArgs<double> args)
         {
             mediaPlayer.Volume = (double)volumeSlider.Value;
@@ -165,16 +177,16 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             Dispatcher.Invoke((Action)delegate ()
             {
                 MainWindow window = (MainWindow)Application.Current.MainWindow;
-                if (identification.Failed)
+                if (!identification.Succeeded)
                 {
-                    window.Log("Request " + identification.RequestId + " error message:"+identification.FailureMsg);
+                    window.Log("Request " + identification.RequestId + " error message: " + identification.FailureMsg);
                     return;
                 }
                 var identificationResult = identification.Value;
                 _identificationResultTxtBlk.Text = identificationResult.IdentifiedProfileId.ToString();
                 _identificationConfidenceTxtBlk.Text = identificationResult.Confidence.ToString();
                 _identificationRequestIdTxtBlk.Text = identification.RequestId.ToString();
-                window.Log("Request " + identification.RequestId + ": Profileid: " + identificationResult.IdentifiedProfileId);
+                window.Log("Request " + identification.RequestId + ": Profile id: " + identificationResult.IdentifiedProfileId);
 
                 _identificationResultStckPnl.Visibility = Visibility.Visible;
             });

@@ -1,4 +1,37 @@
-﻿using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
+﻿// 
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license.
+// 
+// Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
+// 
+// Microsoft Cognitive Services (formerly Project Oxford) GitHub:
+// https://github.com/Microsoft/Cognitive-SpeakerRecognition-Windows
+// 
+// Copyright (c) Microsoft Corporation
+// All rights reserved.
+// 
+// MIT License:
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// 
+
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +45,16 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interfa
     /// </summary>
     interface IAudioFormatHandler
     {
+        /// <summary>
+        /// Input audio codec and container format
+        /// </summary>
         IAudioFormat InputAudioFormat { get; }
 
+        /// <summary>
+        /// Parses an audio file header and returns parsing results (start of data-chunk and number of bytes per second)
+        /// </summary>
+        /// <param name="header">Audio file header</param>
+        /// <returns>Parsing results (start of data-chunk and number of bytes per second)</returns>
         AudioHeaderParsingResult ParseHeader(byte[] header);
     }
 }

@@ -1,4 +1,37 @@
-﻿using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio;
+﻿// 
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license.
+// 
+// Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
+// 
+// Microsoft Cognitive Services (formerly Project Oxford) GitHub:
+// https://github.com/Microsoft/Cognitive-SpeakerRecognition-Windows
+// 
+// Copyright (c) Microsoft Corporation
+// All rights reserved.
+// 
+// MIT License:
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// 
+
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio;
 using System.Text;
 using System;
 
@@ -19,28 +52,28 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         /// <param name="audioContainer">Type of audio container, either RAW or WAV</param>
         public AudioFormat(AudioEncoding encoding, int channelsNumber, int sampleRate, int bitsPerSample, AudioContainer audioContainer)
         {
+            ValidateAudioFormat(channelsNumber, sampleRate, bitsPerSample);
+
             Encoding = encoding;
             ChannelsNumber = channelsNumber;
             SampleRate = sampleRate;
             BitsPerSample = bitsPerSample;
-            Container = audioContainer;
-
-            ValidateAudioFormat();
+            Container = audioContainer;           
         }
 
-        private void ValidateAudioFormat()
+        private void ValidateAudioFormat(int channelsNumber, int sampleRate, int bitsPerSample)
         {
-            if(ChannelsNumber <= 0)
+            if(channelsNumber <= 0)
             {
                 throw new ArgumentException("Channels number must be a positive number.");
             }
 
-            if (SampleRate < 0)
+            if (sampleRate < 0)
             {
                 throw new ArgumentException("Sample rate can't be a negative number.");
             }
 
-            if (BitsPerSample < 0)
+            if (bitsPerSample < 0)
             {
                 throw new ArgumentException("Bits per sample can't be a negative number.");
             }

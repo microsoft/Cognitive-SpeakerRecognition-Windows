@@ -1,4 +1,37 @@
-﻿using Microsoft.ProjectOxford.SpeakerRecognition;
+﻿// 
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license.
+// 
+// Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
+// 
+// Microsoft Cognitive Services (formerly Project Oxford) GitHub:
+// https://github.com/Microsoft/Cognitive-SpeakerRecognition-Windows
+// 
+// Copyright (c) Microsoft Corporation
+// All rights reserved.
+// 
+// MIT License:
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// 
+
+using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 using System;
 using System.Collections.Generic;
@@ -15,7 +48,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
     public class RecognitionResult : IRecognitionResult
     {
         /// <summary>
-        /// Constructor
+        /// Construct a result object for a succesfful recognition
         /// </summary>
         /// <param name="result">Operation result</param>
         /// <param name="clientId">Client id</param>
@@ -25,17 +58,19 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
             this.Value = result;
             this.ClientId = clientId;
             this.RequestId = requestId;
+
+            this.Succeeded = true;
         }
 
         /// <summary>
-        /// Constructor
+        /// Construct a result object for a failed recognition
         /// </summary>
-        /// <param name="failed">Flag that states if the request has failed or not</param>
+        /// <param name="status">Flag that Indicates whether the request has succeeded or not</param>
         /// <param name="failureMsg">Failure message in case of a failure</param>
         /// <param name="requestId">Request id</param>
-        public RecognitionResult(bool failed, string failureMsg, int requestId)
+        public RecognitionResult(bool status, string failureMsg, int requestId)
         {
-            this.Failed = failed;
+            this.Succeeded = status;
             this.FailureMsg = failureMsg;
             this.RequestId = requestId;
         }
@@ -65,9 +100,9 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
         }
 
         /// <summary>
-        /// Flag that states if the request has failed or not
+        /// Flag that Indicates whether the request has succeeded or not
         /// </summary>
-        public bool Failed
+        public bool Succeeded
         {
             get; set;
         }

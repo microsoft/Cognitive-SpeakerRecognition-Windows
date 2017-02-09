@@ -1,16 +1,45 @@
-﻿
+﻿// 
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license.
+// 
+// Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
+// 
+// Microsoft Cognitive Services (formerly Project Oxford) GitHub:
+// https://github.com/Microsoft/Cognitive-SpeakerRecognition-Windows
+// 
+// Copyright (c) Microsoft Corporation
+// All rights reserved.
+// 
+// MIT License:
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// 
+
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
     using Microsoft.ProjectOxford.SpeakerRecognition;
     using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-
-    // System Namespace
     using System;
+    using System.Linq;
     using System.IO;
     using System.Threading.Tasks;
     using System.Threading;
-
-    // Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming Namespace
     using Interface.Client;
     using Interface.Result;
     using Interface.Audio;
@@ -39,7 +68,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <param name="clientId">Id associated with all requests related to this client</param>
         /// <param name="speakerIds">Speaker ids for identification</param>
         /// <param name="stepSize">Step size in seconds</param>
-        /// <param name="windowSize">Windows size in seconds</param>
+        /// <param name="windowSize">Number of seconds sent per request</param>
         /// <param name="audioFormat">Audio format</param>
         /// <param name="resultCallback">Value callback action consisted of identification result, client id and request id</param>
         /// <param name="serviceClient">Client used in identifying the streamed audio file</param>
@@ -88,7 +117,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         }
 
         /// <summary>
-        /// Windows size in seconds
+        /// Number of seconds sent per request
         /// </summary>
         public int WindowSize
         {
@@ -107,13 +136,16 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// Streams audio to recognition service
         /// </summary>
         /// <param name="audioBytes">Audio bytes to be sent for recognition</param>
-        public async Task StreamAudioAsync(byte[] audioBytes)
+        /// <param name="offset">The position in the audio from where the stream should begin</param>
+        /// <param name="length">The length of audio that should be streamed starting from the offset position</param>
+        public async Task StreamAudioAsync(byte[] audioBytes, int offset, int length)
         {
-            await audioProcessor.AppendAsync(audioBytes).ConfigureAwait(false);
+            var audioBuffer = audioBytes.Skip(offset).Take(Math.Min(length, audioBytes.Length-offset)).ToArray();
+            await audioProcessor.AppendAsync(audioBuffer).ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Sends a signal to the recognition client that the audio is stream ended
+        /// Sends a signal to the recognition client that the audio stream ended
         /// </summary>
         public async Task EndStreamAudioAsync()
         {
