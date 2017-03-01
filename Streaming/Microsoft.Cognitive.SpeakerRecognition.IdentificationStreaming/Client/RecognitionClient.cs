@@ -140,8 +140,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <param name="length">The length of audio that should be streamed starting from the offset position</param>
         public async Task StreamAudioAsync(byte[] audioBytes, int offset, int length)
         {
-            var audioBuffer = audioBytes.Skip(offset).Take(Math.Min(length, audioBytes.Length-offset)).ToArray();
-            await audioProcessor.AppendAsync(audioBuffer).ConfigureAwait(false);
+            await audioProcessor.AppendAsync(audioBytes, offset, length).ConfigureAwait(false);
         }
 
         /// <summary>

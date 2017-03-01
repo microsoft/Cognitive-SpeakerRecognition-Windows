@@ -80,7 +80,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         /// </summary>
         /// <param name="windowSize">The number of seconds to be included in each request</param>
         /// <param name="stepSize">The number of seconds between every request</param>
-        /// <param name="audioFormatHandler">A helper handler to process the input stream, and verify it's type</param>
+        /// <param name="audioFormatHandler">A helper handler to process the input stream, and verify its type</param>
         public AudioProcessor(int windowSize, int stepSize, IAudioFormatHandler audioFormatHandler)
         {
 
@@ -145,12 +145,12 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 
             if (offset < 0)
             {
-                throw new ArgumentException("Offset to start sending from must be a positive integer", nameof(offset));
+                throw new ArgumentException("Offset to start sending from must be a non-negative integer", nameof(offset));
             }
 
             if (numberOfBytes < 0)
             {
-                throw new ArgumentException("Number of bytes to send must be a positive integer", nameof(numberOfBytes));
+                throw new ArgumentException("Number of bytes to send must be a non-negative integer", nameof(numberOfBytes));
             }            
 
             if (offset + numberOfBytes > buffer.Length)
@@ -265,8 +265,8 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         private byte[] GenerateWaveFile()
         {
             const int bitDepth = 16;
-            int totalSampleCount = 16000* secondsQueue.Count;
             const int sampleRate = 16000;
+            int totalSampleCount = sampleRate * secondsQueue.Count;            
 
             using (var stream = new MemoryStream())
             {

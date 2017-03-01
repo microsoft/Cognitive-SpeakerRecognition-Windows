@@ -117,11 +117,6 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
                     bool isParsed = false;
                     while (!isParsed)
                     {
-                        if (stream.Position >= this.InputAudioFormat.Container.MaxHeaderSize)
-                        {
-                            //throw new InvalidDataException("Unable to find the data chunk in header");
-                        }
-
                         // Safe to cast to int because the header size can't be > 5k
                         label = GetChunkLabel(reader, stream, (int)stream.Position);
                         int chunkSize = reader.ReadInt32();

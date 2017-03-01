@@ -53,7 +53,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         }
 
         /// <summary>
-        /// Number of bytes per sample
+        /// Number of bytes per second
         /// </summary>
         public int NumberofBytesPerSecond
         {

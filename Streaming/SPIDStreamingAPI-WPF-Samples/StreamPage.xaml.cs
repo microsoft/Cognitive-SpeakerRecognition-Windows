@@ -96,12 +96,12 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             try
             {
                 // Window size in seconds
-                int windowSize = int.Parse(ConfigurationManager.AppSettings["WindowSize"]);
+                int windowSize = int.Parse(_windowSzBx.Text);
 
                 // Amount of seconds needed for sending a request to server
                 // If set to 1, the client will send a request to the server for every second recieved from the user
                 // If set to 2, the client will send a request to the server for every 2 seconds recieved from the user
-                int stepSize = int.Parse(ConfigurationManager.AppSettings["StepSize"]);
+                int stepSize = int.Parse(_stepSzBx.Text);
 
                 // Delay between passing audio chunks to the client in milliseconds
                 int requestDelay = int.Parse(ConfigurationManager.AppSettings["RequestsDelay"]);

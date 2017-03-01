@@ -43,7 +43,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interfa
     /// <summary>
     /// Handles audio formats, and parses header
     /// </summary>
-    interface IAudioFormatHandler
+    internal interface IAudioFormatHandler
     {
         /// <summary>
         /// Input audio codec and container format

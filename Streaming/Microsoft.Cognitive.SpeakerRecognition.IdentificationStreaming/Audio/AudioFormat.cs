@@ -68,12 +68,12 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
                 throw new ArgumentException("Channels number must be a positive number.");
             }
 
-            if (sampleRate < 0)
+            if (sampleRate <= 0)
             {
                 throw new ArgumentException("Sample rate can't be a negative number.");
             }
 
-            if (bitsPerSample < 0)
+            if (bitsPerSample <= 0)
             {
                 throw new ArgumentException("Bits per sample can't be a negative number.");
             }
@@ -122,24 +122,15 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         /// <returns>True if similar</returns>
         public override bool Equals(object obj)
         {
+            if (obj == null)
+                return false;
+
             AudioFormat format = obj as AudioFormat;
-            if (
-                Encoding.Equals(format.Encoding) &&
+            return Encoding.Equals(format.Encoding) &&
                 ChannelsNumber == format.ChannelsNumber &&
                 SampleRate == format.SampleRate &&
                 BitsPerSample == format.BitsPerSample &&
-                Container.Equals(format.Container))
-                return true;
-            return false;
-        }
-
-        /// <summary>
-        /// Returns hash code of object
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            return this.GetHashCode();
+                Container.Equals(format.Container);
         }
 
         /// <summary>
