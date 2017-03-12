@@ -44,7 +44,7 @@ using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
 using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
 
 namespace SPIDIdentificationStreaming_WPF_Samples
 {
@@ -90,9 +90,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         private async void _streamBtn_Click(object sender, RoutedEventArgs e)
         {
             MainWindow window = (MainWindow)Application.Current.MainWindow;
-
-            DisplayAudio();
-
+            
             try
             {
                 // Window size in seconds
@@ -110,6 +108,8 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                     throw new Exception("No File Selected.");
 
                 window.Log("Processing File...");
+                DisplayAudio();
+
                 Profile[] selectedProfiles = SpeakersListPage.SpeakersList.GetSelectedProfiles();
                 Guid[] testProfileIds = new Guid[selectedProfiles.Length];
                 for (int i = 0; i < testProfileIds.Length; i++)
@@ -172,7 +172,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             mediaPlayer.Volume = (double)volumeSlider.Value;
         }
 
-        private void WriteResults(IRecognitionResult identification)
+        private void WriteResults(RecognitionResult identification)
         {
             Dispatcher.Invoke((Action)delegate ()
             {

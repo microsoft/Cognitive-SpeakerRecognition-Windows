@@ -40,19 +40,19 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
     using System.IO;
     using System.Threading.Tasks;
     using System.Threading;
-    using Interface.Client;
-    using Interface.Result;
-    using Interface.Audio;
+    using Result;
     using Audio;
 
     /// <summary>
     /// Speaker Identification-Streaming and Recognition Client
+    /// Organizes the communication between the identification client which performs actual identification and Audio processor module 
+    /// which generates audio buffers to be streamed based on the input user-configurations for step size and window size
     /// </summary>
-    public class RecognitionClient : IRecognitionClient
+    public class RecognitionClient : IDisposable
     {
         private AudioProcessor audioProcessor;
         private int requestID;
-        IIdentificationClient idClient;
+        IdentificationClient idClient;
 
         private readonly int DefaultDelayBetweenRequests = 250;
 
@@ -72,7 +72,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <param name="audioFormat">Audio format</param>
         /// <param name="resultCallback">Value callback action consisted of identification result, client id and request id</param>
         /// <param name="serviceClient">Client used in identifying the streamed audio file</param>
-        internal RecognitionClient(Guid clientId, Guid[] speakerIds, int stepSize, int windowSize, IAudioFormat audioFormat, Action<IRecognitionResult> resultCallback, SpeakerIdentificationServiceClient serviceClient)
+        internal RecognitionClient(Guid clientId, Guid[] speakerIds, int stepSize, int windowSize, AudioFormat audioFormat, Action<RecognitionResult> resultCallback, SpeakerIdentificationServiceClient serviceClient)
         {
             this.ClientId = clientId;
             this.SpeakerIds = speakerIds;
@@ -127,7 +127,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <summary>
         /// Recognition audio format
         /// </summary>
-        public IAudioFormat AudioFormat
+        public AudioFormat AudioFormat
         {
             get; set;
         }

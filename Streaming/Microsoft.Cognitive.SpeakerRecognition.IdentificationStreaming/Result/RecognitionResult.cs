@@ -38,17 +38,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
 {
     /// <summary>
-    /// Identification result
+    /// Recognition result which includes the id of the client initiated the request, the id of the request and the identification result for the request
     /// </summary>
-    public class RecognitionResult : IRecognitionResult
+    public class RecognitionResult
     {
         /// <summary>
-        /// Construct a result object for a succesfful recognition
+        /// Construct a result object for a successful recognition
         /// </summary>
         /// <param name="result">Operation result</param>
         /// <param name="clientId">Client id</param>

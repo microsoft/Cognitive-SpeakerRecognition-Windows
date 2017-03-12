@@ -40,15 +40,13 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
-
-    // Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming Namespace
-    using Interface.Audio;
+    
 
     /// <summary>
     /// An audio processor that handles streaming by means of the sliding window,
     /// It processes input stream, and prepares the corresponding waves according to the sliding window parameters.
     /// </summary>
-    internal class AudioProcessor : IAudioProcessor
+    internal class AudioProcessor
     {
         private Queue<byte[]> secondsQueue;
         private ConcurrentQueue<byte[]> wavesQueue;
@@ -68,7 +66,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 
         private int numberOfBytesPerSecond;
 
-        private IAudioFormatHandler audioFormatHandler;
+        private AudioFormatHandler audioFormatHandler;
         
         /// <summary>
         /// A boolean to indicate whether processing is over or not.
@@ -81,7 +79,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         /// <param name="windowSize">The number of seconds to be included in each request</param>
         /// <param name="stepSize">The number of seconds between every request</param>
         /// <param name="audioFormatHandler">A helper handler to process the input stream, and verify its type</param>
-        public AudioProcessor(int windowSize, int stepSize, IAudioFormatHandler audioFormatHandler)
+        public AudioProcessor(int windowSize, int stepSize, AudioFormatHandler audioFormatHandler)
         {
 
             if (windowSize <= 0)

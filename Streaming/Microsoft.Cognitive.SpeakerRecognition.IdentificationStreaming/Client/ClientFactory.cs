@@ -31,19 +31,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Client;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result;
 using System;
 using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
+using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
     /// <summary>
     /// Identification-Streaming Client Factory
+    /// Used in creating a recognition client to be used in the streaming process
     /// </summary>
-    public class ClientFactory : IClientFactory
+    public class ClientFactory : IDisposable
     {
         /// <summary>
         /// Creates new identification-streaming recognition client
@@ -57,7 +57,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <param name="resultCallBack">Value callback action consisted of identification result, client id and request id</param>
         /// <param name="serviceClient">Client used in identifying the streamed audio file</param>
         /// <returns>Identification-Streaming and recognition client</returns>
-        public IRecognitionClient CreateRecognitionClient(Guid clientId, Guid[] speakerIds, int stepSize, int windowSize, IAudioFormat audioFormat, Action<IRecognitionResult> resultCallBack, SpeakerIdentificationServiceClient serviceClient)
+        public RecognitionClient CreateRecognitionClient(Guid clientId, Guid[] speakerIds, int stepSize, int windowSize, AudioFormat audioFormat, Action<RecognitionResult> resultCallBack, SpeakerIdentificationServiceClient serviceClient)
         {
             if(speakerIds.Length < 1)
             {

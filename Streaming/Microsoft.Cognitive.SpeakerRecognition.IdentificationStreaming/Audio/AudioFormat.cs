@@ -31,7 +31,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio;
 using System.Text;
 using System;
 
@@ -40,7 +39,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
     /// <summary>
     /// Audio codec and container format
     /// </summary>
-    public class AudioFormat : IAudioFormat
+    public class AudioFormat
     {
         /// <summary>
         /// Constructs new audio format object
@@ -70,12 +69,12 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 
             if (sampleRate <= 0)
             {
-                throw new ArgumentException("Sample rate can't be a negative number.");
+                throw new ArgumentException("Sample rate must be a positive number.");
             }
 
             if (bitsPerSample <= 0)
             {
-                throw new ArgumentException("Bits per sample can't be a negative number.");
+                throw new ArgumentException("Bits per sample must be a positive number.");
             }
         }
 
@@ -123,9 +122,17 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         public override bool Equals(object obj)
         {
             if (obj == null)
+            {
                 return false;
+            }                
 
             AudioFormat format = obj as AudioFormat;
+
+            if(format == null)
+            {
+                return false;
+            }
+
             return Encoding.Equals(format.Encoding) &&
                 ChannelsNumber == format.ChannelsNumber &&
                 SampleRate == format.SampleRate &&

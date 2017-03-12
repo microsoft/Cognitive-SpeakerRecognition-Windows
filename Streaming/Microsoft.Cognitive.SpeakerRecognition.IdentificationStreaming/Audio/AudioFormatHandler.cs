@@ -31,7 +31,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Audio;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -45,13 +44,13 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
     /// <summary>
     /// Handles audio formats, and parses header
     /// </summary>
-    internal class AudioFormatHandler : IAudioFormatHandler
+    internal class AudioFormatHandler
     {
         /// <summary>
         /// Constructs new audio format handler
         /// </summary>
         /// <param name="audioFormat">Audio format</param>
-        public AudioFormatHandler(IAudioFormat audioFormat)
+        public AudioFormatHandler(AudioFormat audioFormat)
         {
             this.InputAudioFormat = audioFormat;
             defaultAudioFormat = new AudioFormat(AudioEncoding.PCM, 1, 16000, 16, new AudioContainer(AudioContainerType.WAV));
@@ -62,7 +61,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         /// </summary>
         /// <param name="header">Audio file header</param>
         /// <returns>Parsing results (start of data-chunk and number of bytes per second)</returns>
-        public AudioHeaderParsingResult ParseHeader(byte[] header)
+        public virtual AudioHeaderParsingResult ParseHeader(byte[] header)
         {
             if (header.Length < this.InputAudioFormat.Container.MaxHeaderSize)
             {
@@ -172,7 +171,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
             return this.encoding.GetString(lableBytes, 0, lableBytes.Length);
         }
 
-        private int CalculateBytesPerSecond(IAudioFormat format)
+        private int CalculateBytesPerSecond(AudioFormat format)
         {
             int count = (format.BitsPerSample * format.SampleRate * format.ChannelsNumber) / 8;
             return count;
@@ -182,7 +181,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         /// <summary>
         /// Input audio codec and container format
         /// </summary>
-        public IAudioFormat InputAudioFormat
+        public AudioFormat InputAudioFormat
         {
             get; private set;
         }
@@ -191,7 +190,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 
         private Encoding encoding = new ASCIIEncoding();
 
-        private IAudioFormat defaultAudioFormat;
+        private AudioFormat defaultAudioFormat;
     }
 
 }

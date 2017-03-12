@@ -40,7 +40,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
     /// <summary>
-    /// Audio container
+    /// Audio container which handles two types of containers: RAW and WAV
     /// </summary>
     public class AudioContainer
     {
@@ -73,11 +73,6 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
             if (ContainerType.Equals(container.ContainerType))
                 return true;
             return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return this.GetHashCode();
         }
 
         int maxHeaderSize;

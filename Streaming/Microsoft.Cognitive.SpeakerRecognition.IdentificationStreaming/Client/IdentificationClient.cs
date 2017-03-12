@@ -37,8 +37,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Client;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Interface.Result;
 using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
 using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
@@ -48,18 +46,19 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
     /// <summary>
     /// Identification client
+    /// Performs the identification against SpeakerRecognition  service
     /// </summary>
-    internal class IdentificationClient : IIdentificationClient
+    internal class IdentificationClient : IDisposable
     {
         private Guid[] speakerIds;
-        private Action<IRecognitionResult> resultCallback;
+        private Action<RecognitionResult> resultCallback;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="speakerIds"> Speaker ids for identification</param>
         /// <param name="callback">Value callback action consisted of identification result, request id and second sequence number</param>
-        public IdentificationClient(Guid[] speakerIds, Action<IRecognitionResult> callback)
+        public IdentificationClient(Guid[] speakerIds, Action<RecognitionResult> callback)
         {
             this.speakerIds = speakerIds;
             this.resultCallback = callback;
@@ -89,28 +88,34 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
                 processPollingLocation = await serviceClient.IdentifyAsync(stream, speakerIds, forceShortAudio: true).ConfigureAwait(false);
 
                 IdentificationOperation identificationResponse = null;
-                TimeSpan timeBetweenRetries = TimeSpan.FromSeconds(1.0);
-                await Task.Delay(timeBetweenRetries);
-                identificationResponse = await serviceClient.CheckIdentificationStatusAsync(processPollingLocation).ConfigureAwait(false);
+                int numOfRetries = 3;
+                TimeSpan timeBetweenRetries = TimeSpan.FromSeconds(5.0);
+                while (numOfRetries > 0)
+                {
+                    await Task.Delay(timeBetweenRetries);
+                    identificationResponse = await serviceClient.CheckIdentificationStatusAsync(processPollingLocation);
 
-                if (identificationResponse.Status == Status.Succeeded)
-                {
-                    var result = new RecognitionResult(identificationResponse.ProcessingResult, clientId, requestId);
-                    resultCallback(result);
-                    return;
+                    if (identificationResponse.Status == Status.Succeeded)
+                    {
+                        break;
+                    }
+                    else if (identificationResponse.Status == Status.Failed)
+                    {
+                        var failureResult = new RecognitionResult(false, identificationResponse.Message, requestId);
+                        resultCallback(failureResult);
+                        return;
+                    }
+                    numOfRetries--;
                 }
-                else if (identificationResponse.Status == Status.Failed)
-                {
-                    var failureResult = new RecognitionResult(false, identificationResponse.Message, requestId);
-                    resultCallback(failureResult);
-                    return;
-                }
-                else
+                if (numOfRetries <= 0)
                 {
                     var failureResult = new RecognitionResult(false, "Request timeout.", requestId);
                     resultCallback(failureResult);
                     return;
                 }
+
+                var result = new RecognitionResult(identificationResponse.ProcessingResult, clientId, requestId);
+                resultCallback(result);
             }
             catch (Exception ex)
             {
