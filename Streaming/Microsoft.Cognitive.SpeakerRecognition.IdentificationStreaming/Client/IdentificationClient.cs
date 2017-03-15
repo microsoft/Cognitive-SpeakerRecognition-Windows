@@ -32,23 +32,24 @@
 // 
 
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
 using Microsoft.ProjectOxford.SpeakerRecognition;
 using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-using System.Diagnostics;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
     /// <summary>
     /// Identification client
-    /// Performs the identification against SpeakerRecognition  service
+    /// Performs the identification against SpeakerRecognition service
     /// </summary>
-    internal class IdentificationClient : IDisposable
+    internal class IdentificationClient
     {
         private Guid[] speakerIds;
         private Action<RecognitionResult> resultCallback;
@@ -56,8 +57,8 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="speakerIds"> Speaker ids for identification</param>
-        /// <param name="callback">Value callback action consisted of identification result, request id and second sequence number</param>
+        /// <param name="speakerIds"> Speaker IDs for identification</param>
+        /// <param name="callback">Value callback action consisted of identification result, request ID and second sequence number</param>
         public IdentificationClient(Guid[] speakerIds, Action<RecognitionResult> callback)
         {
             this.speakerIds = speakerIds;
@@ -77,8 +78,8 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// </summary>
         /// <param name="stream">Audio buffer to be recognized</param>
         /// <param name="serviceClient">Client used in identifying the streamed audio wave</param>
-        /// <param name="clientId">Client id</param>
-        /// <param name="requestId">Request id</param>
+        /// <param name="clientId">Client ID</param>
+        /// <param name="requestId">Request ID</param>
         /// <returns></returns>
         public async Task IdentifyStreamAsync(Stream stream, SpeakerIdentificationServiceClient serviceClient, Guid clientId, int requestId)
         {
@@ -88,8 +89,8 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
                 processPollingLocation = await serviceClient.IdentifyAsync(stream, speakerIds, forceShortAudio: true).ConfigureAwait(false);
 
                 IdentificationOperation identificationResponse = null;
-                int numOfRetries = 3;
-                TimeSpan timeBetweenRetries = TimeSpan.FromSeconds(5.0);
+                int numOfRetries = int.Parse(ConfigurationManager.AppSettings["NumberOfPollingRetries"]); ;
+                TimeSpan timeBetweenRetries = TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["TimeSpanBetweenPollingRetries"]));
                 while (numOfRetries > 0)
                 {
                     await Task.Delay(timeBetweenRetries);
@@ -97,6 +98,8 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 
                     if (identificationResponse.Status == Status.Succeeded)
                     {
+                        var result = new RecognitionResult(identificationResponse.ProcessingResult, clientId, requestId);
+                        resultCallback(result);
                         break;
                     }
                     else if (identificationResponse.Status == Status.Failed)
@@ -113,22 +116,12 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
                     resultCallback(failureResult);
                     return;
                 }
-
-                var result = new RecognitionResult(identificationResponse.ProcessingResult, clientId, requestId);
-                resultCallback(result);
             }
             catch (Exception ex)
             {
                 var result = new RecognitionResult(false, ex.Message, requestId);
                 resultCallback(result);
             }
-        }
-
-        /// <summary>
-        /// Disposes the client
-        /// </summary>
-        public void Dispose()
-        {
         }
     }
 }

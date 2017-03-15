@@ -115,7 +115,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         }
 
         /// <summary>
-        /// Compares the input format of this format
+        /// Compares the input format of this audio
         /// </summary>
         /// <param name="obj">Input format to be compared</param>
         /// <returns>True if similar</returns>
@@ -128,12 +128,8 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 
             AudioFormat format = obj as AudioFormat;
 
-            if(format == null)
-            {
-                return false;
-            }
-
-            return Encoding.Equals(format.Encoding) &&
+            return format != null &&
+                Encoding.Equals(format.Encoding) &&
                 ChannelsNumber == format.ChannelsNumber &&
                 SampleRate == format.SampleRate &&
                 BitsPerSample == format.BitsPerSample &&

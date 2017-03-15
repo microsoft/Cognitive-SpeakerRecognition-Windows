@@ -40,7 +40,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
     /// <summary>
-    /// Audio container which handles two types of containers: RAW and WAV
+    /// Audio container which supports two types of containers: RAW and WAV
     /// </summary>
     public class AudioContainer
     {

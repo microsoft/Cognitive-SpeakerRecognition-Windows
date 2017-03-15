@@ -128,7 +128,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 {
                     // Client factory is used to create a recognition client
                     // Recognition client can be used for one audio only. In case of having several audios, a separate client should be created for each one
-                    using (var clientfactory = new ClientFactory())
+                    var clientfactory = new ClientFactory();
                     using (var recognitionClient = clientfactory.CreateRecognitionClient(recognitionClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this._serviceClient))
                     {
                         var chunkSize = 32000;
@@ -142,8 +142,8 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                             await recognitionClient.StreamAudioAsync(buffer, 0, bytesRead).ConfigureAwait(false);
 
                             // Simulates live streaming
-                            // It's recommended to use a delay greater than 200 ms to guarantee receiving responses in the correct order
-                            await Task.Delay(requestDelay);
+                            // It's recommended to use a one second delay to guarantee receiving responses in the correct order
+                            await Task.Delay(requestDelay).ConfigureAwait(false);
                         }
 
                         await recognitionClient.EndStreamAudioAsync().ConfigureAwait(false);
@@ -172,21 +172,21 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             mediaPlayer.Volume = (double)volumeSlider.Value;
         }
 
-        private void WriteResults(RecognitionResult identification)
+        private void WriteResults(RecognitionResult recognitionResult)
         {
             Dispatcher.Invoke((Action)delegate ()
             {
                 MainWindow window = (MainWindow)Application.Current.MainWindow;
-                if (!identification.Succeeded)
+                if (!recognitionResult.Succeeded)
                 {
-                    window.Log("Request " + identification.RequestId + " error message: " + identification.FailureMsg);
+                    window.Log("Request " + recognitionResult.RequestId + " error message: " + recognitionResult.FailureMsg);
                     return;
                 }
-                var identificationResult = identification.Value;
+                var identificationResult = recognitionResult.Value;
                 _identificationResultTxtBlk.Text = identificationResult.IdentifiedProfileId.ToString();
                 _identificationConfidenceTxtBlk.Text = identificationResult.Confidence.ToString();
-                _identificationRequestIdTxtBlk.Text = identification.RequestId.ToString();
-                window.Log("Request " + identification.RequestId + ": Profile id: " + identificationResult.IdentifiedProfileId);
+                _identificationRequestIdTxtBlk.Text = recognitionResult.RequestId.ToString();
+                window.Log("Request " + recognitionResult.RequestId + ": Profile id: " + identificationResult.IdentifiedProfileId);
 
                 _identificationResultStckPnl.Visibility = Visibility.Visible;
             });

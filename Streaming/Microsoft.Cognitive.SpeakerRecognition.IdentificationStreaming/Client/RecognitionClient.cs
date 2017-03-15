@@ -33,15 +33,15 @@
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
-    using Microsoft.ProjectOxford.SpeakerRecognition;
-    using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-    using System;
-    using System.Linq;
+    using System;    
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Threading;
-    using Result;
     using Audio;
+    using Microsoft.ProjectOxford.SpeakerRecognition;
+    using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
+    using Result;    
 
     /// <summary>
     /// Speaker Identification-Streaming and Recognition Client
@@ -65,12 +65,12 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="clientId">Id associated with all requests related to this client</param>
-        /// <param name="speakerIds">Speaker ids for identification</param>
+        /// <param name="clientId">ID associated with all requests related to this client</param>
+        /// <param name="speakerIds">Speaker IDs for identification</param>
         /// <param name="stepSize">Step size in seconds</param>
         /// <param name="windowSize">Number of seconds sent per request</param>
         /// <param name="audioFormat">Audio format</param>
-        /// <param name="resultCallback">Value callback action consisted of identification result, client id and request id</param>
+        /// <param name="resultCallback">Value callback action consisted of identification result, client ID and request ID</param>
         /// <param name="serviceClient">Client used in identifying the streamed audio file</param>
         internal RecognitionClient(Guid clientId, Guid[] speakerIds, int stepSize, int windowSize, AudioFormat audioFormat, Action<RecognitionResult> resultCallback, SpeakerIdentificationServiceClient serviceClient)
         {
@@ -93,7 +93,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         }
 
         /// <summary>
-        /// Id associated with all requests related to this client
+        /// ID associated with all requests related to this client
         /// </summary>
         public Guid ClientId
         {
@@ -101,7 +101,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         }
 
         /// <summary>
-        /// Speaker ids for identification
+        /// Speaker IDs for identification
         /// </summary>
         public Guid[] SpeakerIds
         {
@@ -195,8 +195,6 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
                 this.RequestingTaskCancelletionTokenSource.Cancel();
             }
             this.RequestingTask.Wait();
-
-            idClient.Dispose();
         }
 
     }

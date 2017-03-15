@@ -32,10 +32,10 @@
 // 
 
 using System;
-using Microsoft.ProjectOxford.SpeakerRecognition;
-using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
 using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
+using Microsoft.ProjectOxford.SpeakerRecognition;
+using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
@@ -43,18 +43,18 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
     /// Identification-Streaming Client Factory
     /// Used in creating a recognition client to be used in the streaming process
     /// </summary>
-    public class ClientFactory : IDisposable
+    public class ClientFactory
     {
         /// <summary>
         /// Creates new identification-streaming recognition client
         /// </summary>
-        /// <param name="clientId">Id associated with all requests related to this client</param>
+        /// <param name="clientId">ID associated with all requests related to this client</param>
         /// <param name="speakerIds">Speaker ids for recognition</param>
         /// <param name="stepSize">Frequency of sending requests to the server in seconds. 
         /// If set to 1, the client will send a request to the server for every second received from the user</param>
         /// <param name="windowSize">Number of seconds sent per request</param>
         /// <param name="audioFormat">Audio format</param>
-        /// <param name="resultCallBack">Value callback action consisted of identification result, client id and request id</param>
+        /// <param name="resultCallBack">Value callback action consisted of identification result, client ID and request ID</param>
         /// <param name="serviceClient">Client used in identifying the streamed audio file</param>
         /// <returns>Identification-Streaming and recognition client</returns>
         public RecognitionClient CreateRecognitionClient(Guid clientId, Guid[] speakerIds, int stepSize, int windowSize, AudioFormat audioFormat, Action<RecognitionResult> resultCallBack, SpeakerIdentificationServiceClient serviceClient)
@@ -66,13 +66,6 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 
             var recognitionClient = new RecognitionClient(clientId, speakerIds, stepSize, windowSize, audioFormat, resultCallBack, serviceClient);
             return recognitionClient;
-        }
-
-        /// <summary>
-        ///  Disposes the factory
-        /// </summary>
-        public void Dispose()
-        {
         }
     }
 }

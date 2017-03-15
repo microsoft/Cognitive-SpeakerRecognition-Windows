@@ -69,7 +69,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         private AudioFormatHandler audioFormatHandler;
         
         /// <summary>
-        /// A boolean to indicate whether processing is over or not.
+        /// A boolean to indicate whether processing is complete or not.
         /// </summary>
         public bool IsCompleted { get; private set; }
 

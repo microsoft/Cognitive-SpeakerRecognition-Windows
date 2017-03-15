@@ -42,7 +42,7 @@ using System.Threading.Tasks;
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
 {
     /// <summary>
-    /// Recognition result which includes the id of the client initiated the request, the id of the request and the identification result for the request
+    /// Recognition result which includes the ID of the client initiated the request, the ID of the request and the identification result for the request
     /// </summary>
     public class RecognitionResult
     {
@@ -50,8 +50,8 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
         /// Construct a result object for a successful recognition
         /// </summary>
         /// <param name="result">Operation result</param>
-        /// <param name="clientId">Client id</param>
-        /// <param name="requestId">Request id</param>
+        /// <param name="clientId">Client ID</param>
+        /// <param name="requestId">Request ID</param>
         public RecognitionResult(Identification result, Guid clientId, int requestId)
         {
             this.Value = result;
@@ -66,7 +66,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
         /// </summary>
         /// <param name="status">Flag that Indicates whether the request has succeeded or not</param>
         /// <param name="failureMsg">Failure message in case of a failure</param>
-        /// <param name="requestId">Request id</param>
+        /// <param name="requestId">Request ID</param>
         public RecognitionResult(bool status, string failureMsg, int requestId)
         {
             this.Succeeded = status;
@@ -83,7 +83,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
         }
 
         /// <summary>
-        /// Client id
+        /// Client ID
         /// </summary>
         public Guid ClientId
         {
@@ -91,7 +91,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
         }
 
         /// <summary>
-        /// Request id which gets incremented with each request
+        /// Request ID which gets incremented with each request
         /// </summary>
         public int RequestId
         {
