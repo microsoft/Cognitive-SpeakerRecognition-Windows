@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="IdentificationClient.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,22 +30,21 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
-using Microsoft.ProjectOxford.SpeakerRecognition;
-using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
+    using Microsoft.ProjectOxford.SpeakerRecognition;
+    using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
+
     /// <summary>
     /// Identification client
     /// Performs the identification against SpeakerRecognition service
@@ -55,7 +55,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         private Action<RecognitionResult> resultCallback;
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the IdentificationClient class.
         /// </summary>
         /// <param name="speakerIds"> Speaker IDs for identification</param>
         /// <param name="callback">Value callback action consisted of identification result, request ID and second sequence number</param>
@@ -66,7 +66,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         }
 
         /// <summary>
-        /// The endpoint used by the client to perform the identification.
+        /// Gets or sets the endpoint used by the client to perform the identification.
         /// </summary>
         public string ServiceURI
         {
@@ -80,16 +80,15 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <param name="serviceClient">Client used in identifying the streamed audio wave</param>
         /// <param name="clientId">Client ID</param>
         /// <param name="requestId">Request ID</param>
-        /// <returns></returns>
         public async Task IdentifyStreamAsync(Stream stream, SpeakerIdentificationServiceClient serviceClient, Guid clientId, int requestId)
         {
             try
             {
                 OperationLocation processPollingLocation;
-                processPollingLocation = await serviceClient.IdentifyAsync(stream, speakerIds, forceShortAudio: true).ConfigureAwait(false);
+                processPollingLocation = await serviceClient.IdentifyAsync(stream, this.speakerIds, forceShortAudio: true).ConfigureAwait(false);
 
                 IdentificationOperation identificationResponse = null;
-                int numOfRetries = int.Parse(ConfigurationManager.AppSettings["NumberOfPollingRetries"]); ;
+                int numOfRetries = int.Parse(ConfigurationManager.AppSettings["NumberOfPollingRetries"]);
                 TimeSpan timeBetweenRetries = TimeSpan.FromSeconds(int.Parse(ConfigurationManager.AppSettings["TimeSpanBetweenPollingRetries"]));
                 while (numOfRetries > 0)
                 {
@@ -99,28 +98,30 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
                     if (identificationResponse.Status == Status.Succeeded)
                     {
                         var result = new RecognitionResult(identificationResponse.ProcessingResult, clientId, requestId);
-                        resultCallback(result);
+                        this.resultCallback(result);
                         break;
                     }
                     else if (identificationResponse.Status == Status.Failed)
                     {
                         var failureResult = new RecognitionResult(false, identificationResponse.Message, requestId);
-                        resultCallback(failureResult);
+                        this.resultCallback(failureResult);
                         return;
                     }
+
                     numOfRetries--;
                 }
+
                 if (numOfRetries <= 0)
                 {
                     var failureResult = new RecognitionResult(false, "Request timeout.", requestId);
-                    resultCallback(failureResult);
+                    this.resultCallback(failureResult);
                     return;
                 }
             }
             catch (Exception ex)
             {
                 var result = new RecognitionResult(false, ex.Message, requestId);
-                resultCallback(result);
+                this.resultCallback(result);
             }
         }
     }

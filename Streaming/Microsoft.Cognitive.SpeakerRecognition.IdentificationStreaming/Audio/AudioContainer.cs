@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="AudioContainer.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,62 +30,14 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
-    /// <summary>
-    /// Audio container which supports two types of containers: RAW and WAV
-    /// </summary>
-    public class AudioContainer
-    {
-        /// <summary>
-        /// Creates new audio container object
-        /// </summary>
-        /// <param name="type">Audio container type</param>
-        public AudioContainer(AudioContainerType type)
-        {
-            ContainerType = type;
-
-            if (type.Equals(AudioContainerType.WAV))
-                this.maxHeaderSize = 5000;
-            else if (type.Equals(AudioContainerType.RAW))
-                this.maxHeaderSize = 0;
-        }
-
-        /// <summary>
-        /// Audio container type
-        /// </summary>
-        public AudioContainerType ContainerType
-        {
-            get;
-            set;
-        }
-
-        public override bool Equals(object obj)
-        {
-            AudioContainer container = obj as AudioContainer;
-            if (ContainerType.Equals(container.ContainerType))
-                return true;
-            return false;
-        }
-
-        int maxHeaderSize;
-
-        internal int MaxHeaderSize
-        {
-            get
-            {
-                return maxHeaderSize;
-            }            
-        }
-    }
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Types of audio containers
@@ -100,5 +53,59 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         /// WAV audio
         /// </summary>
         WAV
+    }
+
+    /// <summary>
+    /// Audio container which supports two types of containers: RAW and WAV
+    /// </summary>
+    public class AudioContainer
+    {
+        private int maxHeaderSize;
+
+        /// <summary>
+        /// Initializes a new instance of the AudioContainer class.
+        /// </summary>
+        /// <param name="type">Audio container type</param>
+        public AudioContainer(AudioContainerType type)
+        {
+            this.ContainerType = type;
+
+            if (type.Equals(AudioContainerType.WAV))
+            {
+                this.maxHeaderSize = 5000;
+            }                
+            else if (type.Equals(AudioContainerType.RAW))
+            {
+                this.maxHeaderSize = 0;
+            }                
+        }
+
+        /// <summary>
+        /// Gets or sets audio container type
+        /// </summary>
+        public AudioContainerType ContainerType
+        {
+            get;
+            set;
+        }
+
+        internal int MaxHeaderSize
+        {
+            get
+            {
+                return this.maxHeaderSize;
+            }            
+        }
+
+        public override bool Equals(object obj)
+        {
+            AudioContainer container = obj as AudioContainer;
+            if (this.ContainerType.Equals(container.ContainerType))
+            {
+                return true;
+            }
+                
+            return false;
+        }
     }
 }

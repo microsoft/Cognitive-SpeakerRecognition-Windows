@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="App.xaml.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,12 +30,11 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using System.Windows;
 
 namespace SPIDIdentificationStreaming_WPF_Samples
 {
+    using System.Windows;
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>

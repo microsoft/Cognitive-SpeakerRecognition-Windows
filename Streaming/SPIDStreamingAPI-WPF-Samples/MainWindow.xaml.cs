@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="MainWindow.xaml.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,18 +30,35 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using SampleUserControlLibrary;
-using System.Windows;
 
 namespace SPIDIdentificationStreaming_WPF_Samples
 {
+    using System.Windows;
+    using SampleUserControlLibrary;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Initializes a new instance of the MainWindow class.
+        /// </summary>
+        public MainWindow()
+        {
+            this.InitializeComponent();
+
+            this._scenariosControl.SampleTitle = "Speaker Streaming Sample";
+            this._scenariosControl.SampleScenarioList = new Scenario[]
+            {
+                new Scenario{ Title = "Enroll Speakers", PageClass = typeof(EnrollSpeakersPage) },
+                new Scenario{ Title = "Stream File", PageClass = typeof(StreamPage) },
+            };
+
+            this._scenariosControl.Disclaimer = "Microsoft will receive the audio files you upload and may use them to improve Speaker Recognition API and related services. By submitting an audio, you confirm you have consent from everyone in it.";
+            this._scenariosControl.ClearLog();
+        }
+
         /// <summary>
         /// Gets the sample scenario control
         /// </summary>
@@ -48,27 +66,8 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         {
             get
             {
-                return _scenariosControl;
+                return this._scenariosControl;
             }
-        }
-
-        /// <summary>
-        /// Constructor to initialize the Main Window
-        /// </summary>
-        public MainWindow()
-        {
-            InitializeComponent();
-
-            _scenariosControl.SampleTitle = "Speaker Streaming Sample";
-            _scenariosControl.SampleScenarioList = new Scenario[]
-            {
-                new Scenario{ Title = "Enroll Speakers", PageClass = typeof(EnrollSpeakersPage)},
-                new Scenario{ Title = "Stream File", PageClass = typeof(StreamPage)},
-            };
-
-            _scenariosControl.Disclaimer = "Microsoft will receive the audio files you upload and may use them to improve Speaker Recognition API and related services. By submitting an audio, you confirm you have consent from everyone in it.";
-
-            _scenariosControl.ClearLog();
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         /// <param name="message">The message to log</param>
         public void Log(string message)
         {
-            _scenariosControl.Log(message);
+            this._scenariosControl.Log(message);
         }
     }
 }

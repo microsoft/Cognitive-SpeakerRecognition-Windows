@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="AudioProcessor.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,7 +30,6 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
@@ -39,8 +39,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
-    using System.Threading.Tasks;
-    
+    using System.Threading.Tasks;    
 
     /// <summary>
     /// An audio processor that handles streaming by means of the sliding window,
@@ -48,6 +47,8 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
     /// </summary>
     internal class AudioProcessor
     {
+        private readonly int maxWaveHeaderSize;
+
         private Queue<byte[]> secondsQueue;
         private ConcurrentQueue<byte[]> wavesQueue;
 
@@ -58,8 +59,6 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         private byte[] headerBuffer;
         private int headerBufferIndex;
 
-        private readonly int MaxWaveHeaderSize;
-
         private int stepSize = 0;
         private int windowSize = 0;
         private int secondsBuffered = 0;
@@ -69,30 +68,24 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         private AudioFormatHandler audioFormatHandler;
         
         /// <summary>
-        /// A boolean to indicate whether processing is complete or not.
-        /// </summary>
-        public bool IsCompleted { get; private set; }
-
-        /// <summary>
-        /// A constructor to create an AudioProcessor object given a specified window size, step size and an audio format handler
+        /// Initializes a new instance of the AudioProcessor class given a specified window size, step size and an audio format handler
         /// </summary>
         /// <param name="windowSize">The number of seconds to be included in each request</param>
         /// <param name="stepSize">The number of seconds between every request</param>
         /// <param name="audioFormatHandler">A helper handler to process the input stream, and verify its type</param>
         public AudioProcessor(int windowSize, int stepSize, AudioFormatHandler audioFormatHandler)
         {
-
             if (windowSize <= 0)
             {
                 throw new ArgumentException("Window size must be a positive integer", nameof(windowSize));
             }
 
-            if(stepSize <= 0)
+            if (stepSize <= 0)
             {
                 throw new ArgumentException("Step size must be a positive integer", nameof(stepSize));
             }
 
-            if(audioFormatHandler == null)
+            if (audioFormatHandler == null)
             {
                 throw new ArgumentNullException(nameof(audioFormatHandler));
             }
@@ -107,12 +100,17 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
             this.lastSecond = null;
             this.lastSecondIndex = 0;
 
-            this.MaxWaveHeaderSize = audioFormatHandler.InputAudioFormat.Container.MaxHeaderSize;
+            this.maxWaveHeaderSize = audioFormatHandler.InputAudioFormat.Container.MaxHeaderSize;
 
             this.headerFound = false;
-            this.headerBuffer = new byte[MaxWaveHeaderSize];
+            this.headerBuffer = new byte[this.maxWaveHeaderSize];
             this.headerBufferIndex = 0;
         }
+
+        /// <summary>
+        /// Gets a boolean to indicate whether processing is complete or not.
+        /// </summary>
+        public bool IsCompleted { get; private set; }
 
         /// <summary>
         /// Stores input bytes into buffer for processing.
@@ -120,12 +118,12 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         /// <param name="bytesToSend">The byte array to send</param>
         public async Task AppendAsync(byte[] bytesToSend)
         {
-            if(bytesToSend == null)
+            if (bytesToSend == null)
             {
                 throw new ArgumentNullException(nameof(bytesToSend));
             }
 
-            await AppendAsync(bytesToSend, 0, bytesToSend.Length).ConfigureAwait(false);
+            await this.AppendAsync(bytesToSend, 0, bytesToSend.Length).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -156,13 +154,13 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
                 throw new ArgumentException("There aren't enough bytes to send");
             }
 
-            if (!headerFound)
+            if (!this.headerFound)
             {
-                await ProcessHeader(buffer, offset, numberOfBytes).ConfigureAwait(false);
+                await this.ProcessHeader(buffer, offset, numberOfBytes).ConfigureAwait(false);
             }
             else
             {
-                await AppendToQueue(buffer, offset, numberOfBytes).ConfigureAwait(false);
+                await this.AppendToQueue(buffer, offset, numberOfBytes).ConfigureAwait(false);
             }
         }
 
@@ -173,10 +171,11 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         public Task<byte[]> GetNextRequestAsync()
         {
             byte[] audio;
-            if (!wavesQueue.TryDequeue(out audio))
+            if (!this.wavesQueue.TryDequeue(out audio))
             {
                 return Task.FromResult<byte[]>(null);
             }
+
             return Task.FromResult(audio);
         }
 
@@ -188,7 +187,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
             this.IsCompleted = true;
             if (this.secondsBuffered > 0)
             {
-                await PrepareRequestAsync().ConfigureAwait(false);
+                await this.PrepareRequestAsync().ConfigureAwait(false);
             }
         }
 
@@ -196,94 +195,95 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         {
             do
             {
-                int numberOfBytesToSend = Math.Min(numberOfBytes, numberOfBytesPerSecond - lastSecondIndex);
-                Array.Copy(bytesToSend, offset, lastSecond, lastSecondIndex, numberOfBytesToSend);
+                int numberOfBytesToSend = Math.Min(numberOfBytes, this.numberOfBytesPerSecond - this.lastSecondIndex);
+                Array.Copy(bytesToSend, offset, this.lastSecond, this.lastSecondIndex, numberOfBytesToSend);
 
                 offset += numberOfBytesToSend;
                 numberOfBytes -= numberOfBytesToSend;
-                lastSecondIndex += numberOfBytesToSend;
+                this.lastSecondIndex += numberOfBytesToSend;
 
-                if (lastSecondIndex == numberOfBytesPerSecond)
+                if (this.lastSecondIndex == this.numberOfBytesPerSecond)
                 {
-                    var second = (byte[])lastSecond.Clone();
+                    var second = (byte[])this.lastSecond.Clone();
 
-                    secondsQueue.Enqueue(second);
-                    if (secondsQueue.Count > this.windowSize)
+                    this.secondsQueue.Enqueue(second);
+                    if (this.secondsQueue.Count > this.windowSize)
                     {
-                        secondsQueue.Dequeue();
+                        this.secondsQueue.Dequeue();
                     }
 
-                    secondsBuffered = (secondsBuffered + 1) % this.stepSize;
-                    if (secondsBuffered == 0)
+                    this.secondsBuffered = (this.secondsBuffered + 1) % this.stepSize;
+                    if (this.secondsBuffered == 0)
                     {
-                        await PrepareRequestAsync().ConfigureAwait(false);
+                        await this.PrepareRequestAsync().ConfigureAwait(false);
                     }
 
-                    lastSecondIndex = 0;
+                    this.lastSecondIndex = 0;
                 }
-            } while (numberOfBytes > 0);
+            }
+            while (numberOfBytes > 0);
         }
 
         private async Task ProcessHeader(byte[] bytesToSend, int offset, int numberOfBytes)
         {
-            int numberOfBytesToSend = Math.Min(numberOfBytes, MaxWaveHeaderSize - headerBufferIndex);
-            Array.Copy(bytesToSend, offset, headerBuffer, headerBufferIndex, numberOfBytesToSend);
+            int numberOfBytesToSend = Math.Min(numberOfBytes, this.maxWaveHeaderSize - this.headerBufferIndex);
+            Array.Copy(bytesToSend, offset, this.headerBuffer, this.headerBufferIndex, numberOfBytesToSend);
 
             offset += numberOfBytesToSend;
             numberOfBytes -= numberOfBytesToSend;
-            headerBufferIndex += numberOfBytesToSend;
+            this.headerBufferIndex += numberOfBytesToSend;
 
-            if (headerBufferIndex == MaxWaveHeaderSize)
+            if (this.headerBufferIndex == this.maxWaveHeaderSize)
             {
-                var result = audioFormatHandler.ParseHeader(headerBuffer);
+                var result = this.audioFormatHandler.ParseHeader(this.headerBuffer);
 
                 this.numberOfBytesPerSecond = result.NumberofBytesPerSecond;
-                if(this.numberOfBytesPerSecond <= 0)
+                if (this.numberOfBytesPerSecond <= 0)
                 {
                     throw new InvalidDataException("The input audio's number of bytes per second must be a positive integer");
                 }
 
-                this.lastSecond = new byte[numberOfBytesPerSecond];
+                this.lastSecond = new byte[this.numberOfBytesPerSecond];
 
-                headerFound = true;
+                this.headerFound = true;
                 int headerSize = result.DataChunckStart;
 
-                await AppendAsync(headerBuffer, headerSize, MaxWaveHeaderSize - headerSize).ConfigureAwait(false);
-                await AppendAsync(bytesToSend, offset, numberOfBytes).ConfigureAwait(false);
+                await this.AppendAsync(this.headerBuffer, headerSize, this.maxWaveHeaderSize - headerSize).ConfigureAwait(false);
+                await this.AppendAsync(bytesToSend, offset, numberOfBytes).ConfigureAwait(false);
             }
         }
 
         private Task PrepareRequestAsync()
         {
-            var audioWave = GenerateWaveFile();
-            wavesQueue.Enqueue(audioWave);
+            var audioWave = this.GenerateWaveFile();
+            this.wavesQueue.Enqueue(audioWave);
             return Task.FromResult(0);
         }
 
         private byte[] GenerateWaveFile()
         {
-            const int bitDepth = 16;
-            const int sampleRate = 16000;
-            int totalSampleCount = sampleRate * secondsQueue.Count;            
+            const int BitDepth = 16;
+            const int SampleRate = 16000;
+            int totalSampleCount = SampleRate * this.secondsQueue.Count;            
 
             using (var stream = new MemoryStream())
             {
                 stream.Position = 0;
                 stream.Write(Encoding.ASCII.GetBytes("RIFF"), 0, 4);
-                stream.Write(BitConverter.GetBytes(((bitDepth / 8) * totalSampleCount) + 36), 0, 4);
+                stream.Write(BitConverter.GetBytes(((BitDepth / 8) * totalSampleCount) + 36), 0, 4);
                 stream.Write(Encoding.ASCII.GetBytes("WAVE"), 0, 4);
                 stream.Write(Encoding.ASCII.GetBytes("fmt "), 0, 4);
                 stream.Write(BitConverter.GetBytes(16), 0, 4);
                 stream.Write(BitConverter.GetBytes((ushort)1), 0, 2);
                 stream.Write(BitConverter.GetBytes(1), 0, 2);
-                stream.Write(BitConverter.GetBytes(sampleRate), 0, 4);
-                stream.Write(BitConverter.GetBytes(sampleRate * (bitDepth / 8)), 0, 4);
-                stream.Write(BitConverter.GetBytes((ushort)(bitDepth / 8)), 0, 2);
-                stream.Write(BitConverter.GetBytes(bitDepth), 0, 2);
+                stream.Write(BitConverter.GetBytes(SampleRate), 0, 4);
+                stream.Write(BitConverter.GetBytes(SampleRate * (BitDepth / 8)), 0, 4);
+                stream.Write(BitConverter.GetBytes((ushort)(BitDepth / 8)), 0, 2);
+                stream.Write(BitConverter.GetBytes(BitDepth), 0, 2);
                 stream.Write(Encoding.ASCII.GetBytes("data"), 0, 4);
-                stream.Write(BitConverter.GetBytes((bitDepth / 8) * totalSampleCount), 0, 4);
+                stream.Write(BitConverter.GetBytes((BitDepth / 8) * totalSampleCount), 0, 4);
 
-                foreach (var wave in secondsQueue)
+                foreach (var wave in this.secondsQueue)
                 {
                     stream.Write(wave, 0, wave.Length);
                 }
@@ -291,6 +291,5 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
                 return stream.ToArray();
             }
         }
-
     }
 }

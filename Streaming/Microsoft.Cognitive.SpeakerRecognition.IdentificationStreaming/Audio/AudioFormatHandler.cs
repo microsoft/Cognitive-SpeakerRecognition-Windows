@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="AudioFormatHandler.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,31 +30,44 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Handles audio formats, and parses header
     /// </summary>
     internal class AudioFormatHandler
     {
+        private AudioHeaderParsingResult parsingResult;
+
+        private Encoding encoding = new ASCIIEncoding();
+
+        private AudioFormat defaultAudioFormat;
+
         /// <summary>
-        /// Constructs new audio format handler
+        /// Initializes a new instance of the AudioFormatHandler class.
         /// </summary>
         /// <param name="audioFormat">Audio format</param>
         public AudioFormatHandler(AudioFormat audioFormat)
         {
             this.InputAudioFormat = audioFormat;
-            defaultAudioFormat = new AudioFormat(AudioEncoding.PCM, 1, 16000, 16, new AudioContainer(AudioContainerType.WAV));
+            this.defaultAudioFormat = new AudioFormat(AudioEncoding.PCM, 1, 16000, 16, new AudioContainer(AudioContainerType.WAV));
+        }
+
+        /// <summary>
+        /// Gets input audio codec and container format
+        /// </summary>
+        public AudioFormat InputAudioFormat
+        {
+            get; private set;
         }
 
         /// <summary>
@@ -71,18 +85,18 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
             this.parsingResult = new AudioHeaderParsingResult();
             if (this.InputAudioFormat.Container.MaxHeaderSize == 0)
             {
-                this.parsingResult.NumberofBytesPerSecond = CalculateBytesPerSecond(this.defaultAudioFormat);
+                this.parsingResult.NumberofBytesPerSecond = this.CalculateBytesPerSecond(this.defaultAudioFormat);
                 this.parsingResult.DataChunckStart = 0;
                 return this.parsingResult;
             }
 
-            ProcessHeader(header);
+            this.ProcessHeader(header);
 
-            this.parsingResult.NumberofBytesPerSecond = CalculateBytesPerSecond(this.InputAudioFormat);
+            this.parsingResult.NumberofBytesPerSecond = this.CalculateBytesPerSecond(this.InputAudioFormat);
             return this.parsingResult;
         }
 
-        void ProcessHeader(byte[] header)
+        private void ProcessHeader(byte[] header)
         {
             var parsedFormat = this.ParseContainerHeader(header);
 
@@ -101,13 +115,13 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
             {
                 if (this.InputAudioFormat.Container.ContainerType.Equals(AudioContainerType.WAV))
                 {
-                    string label = GetChunkLabel(reader, stream, 0);
+                    string label = this.GetChunkLabel(reader, stream, 0);
                     if (string.CompareOrdinal(label, "RIFF") != 0)
                     {
                         throw new InvalidDataException("Unable to find RIFF signature in header");
                     }
 
-                    label = GetChunkLabel(reader, stream, 8);
+                    label = this.GetChunkLabel(reader, stream, 8);
                     if (string.CompareOrdinal(label, "WAVE") != 0)
                     {
                         throw new InvalidDataException("Unable to find WAVE signature in header");
@@ -117,7 +131,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
                     while (!isParsed)
                     {
                         // Safe to cast to int because the header size can't be > 5k
-                        label = GetChunkLabel(reader, stream, (int)stream.Position);
+                        label = this.GetChunkLabel(reader, stream, (int)stream.Position);
                         int chunkSize = reader.ReadInt32();
 
                         switch (label)
@@ -126,7 +140,9 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
                                 long currentStreamPosition = stream.Position;
                                 AudioEncoding encoding = AudioEncoding.None;
                                 if (reader.ReadInt16() == 1)
+                                {
                                     encoding = AudioEncoding.PCM;
+                                }                                    
 
                                 int channelsNumber = reader.ReadInt16();
 
@@ -143,11 +159,12 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
                                 break;
                             case "data":
                                 isParsed = true;
-                                parsingResult.DataChunckStart = (int)stream.Position;
+                                this.parsingResult.DataChunckStart = (int)stream.Position;
                                 if (parsedFormat == null)
                                 {
                                     throw new InvalidDataException("Unable to find the fmt chunk in header");
                                 }
+
                                 break;
                             default:
                                 stream.Position += chunkSize;                                
@@ -176,21 +193,5 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
             int count = (format.BitsPerSample * format.SampleRate * format.ChannelsNumber) / 8;
             return count;
         }
-
-
-        /// <summary>
-        /// Input audio codec and container format
-        /// </summary>
-        public AudioFormat InputAudioFormat
-        {
-            get; private set;
-        }
-
-        private AudioHeaderParsingResult parsingResult;
-
-        private Encoding encoding = new ASCIIEncoding();
-
-        private AudioFormat defaultAudioFormat;
     }
-
 }

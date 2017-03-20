@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="SpeakersListPage.xaml.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,44 +30,41 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using Microsoft.ProjectOxford.SpeakerRecognition;
-using Microsoft.ProjectOxford.SpeakerRecognition.Contract;
-using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace SPIDIdentificationStreaming_WPF_Samples
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using Microsoft.ProjectOxford.SpeakerRecognition;
+    using Microsoft.ProjectOxford.SpeakerRecognition.Contract;
+    using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
+
     /// <summary>
     /// Interaction logic for SpeakersListPage.xaml
     /// </summary>
     public partial class SpeakersListPage : Page
     {
-        private bool _speakersLoaded = false;
-        
-        private SpeakerIdentificationServiceClient _serviceClient;
+        private static SpeakersListPage speakersList = new SpeakersListPage();
+        private bool speakersLoaded = false;        
+        private SpeakerIdentificationServiceClient serviceClient;
 
-        private static SpeakersListPage s_speakersList = new SpeakersListPage();
+        private SpeakersListPage()
+        {
+            this.InitializeComponent();
+        }
 
         /// <summary>
-        /// Represents the only instance of the Speakers List Page
+        /// Gets the only instance of the Speakers List Page
         /// </summary>
         public static SpeakersListPage SpeakersList
         {
             get
             {
-                return s_speakersList;
+                return speakersList;
             }
-        }
-
-        private SpeakersListPage()
-        {
-            InitializeComponent();
         }
 
         /// <summary>
@@ -75,9 +73,9 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         /// <param name="speaker">The speaker profile to add</param>
         public void AddSpeaker(Profile speaker)
         {
-            Dispatcher.Invoke((Action)delegate ()
+            Dispatcher.Invoke((Action)delegate
             {
-                _speakersListView.Items.Add(speaker);
+                this._speakersListView.Items.Add(speaker);
             });
         }
 
@@ -89,41 +87,30 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         {
             try
             {
-                LogToMainWindow("Retrieving All Profiles...");
-                Profile[] allProfiles = await _serviceClient.GetProfilesAsync().ConfigureAwait(false);
-                LogToMainWindow("All Profiles Retrieved.");
+                this.LogToMainWindow("Retrieving All Profiles...");
+                Profile[] allProfiles = await this.serviceClient.GetProfilesAsync().ConfigureAwait(false);
+                this.LogToMainWindow("All Profiles Retrieved.");
 
-                Dispatcher.Invoke((Action)delegate ()
+                Dispatcher.Invoke((Action)delegate
                 {
-                    _speakersListView.Items.Clear();
+                    this._speakersListView.Items.Clear();
                 });
 
                 foreach (Profile profile in allProfiles)
-                    AddSpeaker(profile);
-                _speakersLoaded = true;
+                {
+                    this.AddSpeaker(profile);
+                }
+                    
+                this.speakersLoaded = true;
             }
             catch (GetProfileException ex)
             {
-                LogToMainWindow("Error Retrieving Profiles: " + ex.Message);
+                this.LogToMainWindow("Error Retrieving Profiles: " + ex.Message);
             }
             catch (Exception ex)
             {
-                LogToMainWindow("Error: " + ex.Message);
+                this.LogToMainWindow("Error: " + ex.Message);
             }
-        }
-
-        private async void _UpdateBtn_Click(object sender, RoutedEventArgs e)
-        {
-            await UpdateAllSpeakersAsync().ConfigureAwait(false);
-        }
-
-        private void LogToMainWindow(string logString)
-        {
-            Dispatcher.Invoke((Action)delegate ()
-            {
-                MainWindow window = (MainWindow)Application.Current.MainWindow;
-                window.Log(logString);
-            });
         }
 
         /// <summary>
@@ -131,7 +118,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         /// </summary>
         public void SetSingleSelectionMode()
         {
-            _speakersListView.SelectionMode = System.Windows.Controls.SelectionMode.Single;
+            this._speakersListView.SelectionMode = System.Windows.Controls.SelectionMode.Single;
         }
 
         /// <summary>
@@ -139,7 +126,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         /// </summary>
         public void SetMultipleSelectionMode()
         {
-            _speakersListView.SelectionMode = SelectionMode.Multiple;
+            this._speakersListView.SelectionMode = SelectionMode.Multiple;
         }
 
         /// <summary>
@@ -148,24 +135,44 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         /// <returns>An array of the selected identification profiles</returns>
         public Profile[] GetSelectedProfiles()
         {
-            if (_speakersListView.SelectedItems.Count == 0)
+            if (this._speakersListView.SelectedItems.Count == 0)
+            {
                 throw new Exception("No Speakers Selected.");
-            Profile[] result = new Profile[_speakersListView.SelectedItems.Count];
+            }
+                
+            Profile[] result = new Profile[this._speakersListView.SelectedItems.Count];
             for (int i = 0; i < result.Length; i++)
-                result[i] = _speakersListView.SelectedItems[i] as Profile;
+            {
+                result[i] = this._speakersListView.SelectedItems[i] as Profile;
+            }
+                
             return result;
+        }
+
+        private async void _UpdateBtn_Click(object sender, RoutedEventArgs e)
+        {
+            await this.UpdateAllSpeakersAsync().ConfigureAwait(false);
+        }
+
+        private void LogToMainWindow(string logString)
+        {
+            Dispatcher.Invoke((Action)delegate
+            {
+                MainWindow window = (MainWindow)Application.Current.MainWindow;
+                window.Log(logString);
+            });
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (_speakersLoaded == false)
+            if (this.speakersLoaded == false)
             {
-                Dispatcher.Invoke((Action)delegate ()
+                Dispatcher.Invoke((Action)delegate
                 {
                     MainWindow window = (MainWindow)Application.Current.MainWindow;
-                    _serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
+                    this.serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
                 });
-                await UpdateAllSpeakersAsync().ConfigureAwait(false);
+                await this.UpdateAllSpeakersAsync().ConfigureAwait(false);
             }
         }
     }

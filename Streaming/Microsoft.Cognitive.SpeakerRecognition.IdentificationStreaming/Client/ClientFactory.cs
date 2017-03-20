@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="ClientFactory.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,16 +30,15 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using System;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
-using Microsoft.ProjectOxford.SpeakerRecognition;
-using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
+    using System;
+    using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
+    using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
+    using Microsoft.ProjectOxford.SpeakerRecognition;
+    using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
+
     /// <summary>
     /// Identification-Streaming Client Factory
     /// Used in creating a recognition client to be used in the streaming process
@@ -59,7 +59,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <returns>Identification-Streaming and recognition client</returns>
         public RecognitionClient CreateRecognitionClient(Guid clientId, Guid[] speakerIds, int stepSize, int windowSize, AudioFormat audioFormat, Action<RecognitionResult> resultCallBack, SpeakerIdentificationServiceClient serviceClient)
         {
-            if(speakerIds.Length < 1)
+            if (speakerIds.Length < 1)
             {
                 throw new ArgumentException("Speakers count can't be smaller than 1.");
             }            

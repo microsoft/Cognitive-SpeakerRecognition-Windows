@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="StreamPage.xaml.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,45 +30,44 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using Microsoft.ProjectOxford.SpeakerRecognition;
-using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-using Microsoft.Win32;
-using System;
-using System.Configuration;
-using System.Linq;
-using System.IO;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Windows;
-using System.Windows.Controls;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client;
-using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
 
 namespace SPIDIdentificationStreaming_WPF_Samples
 {
+    using System;
+    using System.Configuration;
+    using System.IO;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
+    using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client;
+    using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
+    using Microsoft.ProjectOxford.SpeakerRecognition;
+    using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
+    using Microsoft.Win32;
+
     /// <summary>
     /// Interaction logic for IdentifyFilePage.xaml
     /// </summary>
     public partial class StreamPage : Page
     {
-        private string _selectedFile = "";
+        private string selectedFile = string.Empty;
 
-        private SpeakerIdentificationServiceClient _serviceClient;
+        private SpeakerIdentificationServiceClient serviceClient;
 
         /// <summary>
-        /// Constructor to initialize the Identify File page
+        /// Initializes a new instance of the StreamPage class
         /// </summary>
         public StreamPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            _speakersListFrame.Navigate(SpeakersListPage.SpeakersList);
+            this._speakersListFrame.Navigate(SpeakersListPage.SpeakersList);
 
             MainWindow window = (MainWindow)Application.Current.MainWindow;
-            _serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
+            this.serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
         }
 
         private void _loadFileBtn_Click(object sender, RoutedEventArgs e)
@@ -83,14 +83,15 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 window.Log("No File Selected.");
                 return;
             }
+
             window.Log("File Selected: " + openFileDialog.FileName);
-            _selectedFile = openFileDialog.FileName;
+            this.selectedFile = openFileDialog.FileName;
         }
 
         private async void _streamBtn_Click(object sender, RoutedEventArgs e)
         {
             MainWindow window = (MainWindow)Application.Current.MainWindow;
-            
+
             try
             {
                 // Window size in seconds
@@ -104,11 +105,13 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 // Delay between passing audio chunks to the client in milliseconds
                 int requestDelay = int.Parse(ConfigurationManager.AppSettings["RequestsDelay"]);
 
-                if (_selectedFile == "")
+                if (this.selectedFile == string.Empty)
+                {
                     throw new Exception("No File Selected.");
+                }                    
 
                 window.Log("Processing File...");
-                DisplayAudio();
+                this.DisplayAudio();
 
                 Profile[] selectedProfiles = SpeakersListPage.SpeakersList.GetSelectedProfiles();
                 Guid[] testProfileIds = new Guid[selectedProfiles.Length];
@@ -124,12 +127,12 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 // Supported containers: WAV and RAW (no header)
                 // Supported format: Encoding = PCM, Channels = Mono (1), Rate = 16k, Bits per sample = 16
                 var audioFormat = new AudioFormat(AudioEncoding.PCM, 1, 16000, 16, new AudioContainer(AudioContainerType.WAV));
-                using (Stream audioStream = File.OpenRead(_selectedFile))
+                using (Stream audioStream = File.OpenRead(this.selectedFile))
                 {
                     // Client factory is used to create a recognition client
                     // Recognition client can be used for one audio only. In case of having several audios, a separate client should be created for each one
                     var clientfactory = new ClientFactory();
-                    using (var recognitionClient = clientfactory.CreateRecognitionClient(recognitionClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this._serviceClient))
+                    using (var recognitionClient = clientfactory.CreateRecognitionClient(recognitionClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this.serviceClient))
                     {
                         var chunkSize = 32000;
                         var buffer = new byte[chunkSize];
@@ -162,7 +165,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
 
         private async void DisplayAudio()
         {
-            mediaPlayer.Source = new Uri(_selectedFile);
+            mediaPlayer.Source = new Uri(this.selectedFile);
             mediaPlayer.Play();
             _mediaElementStckPnl.Visibility = Visibility.Visible;
         }
@@ -174,7 +177,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
 
         private void WriteResults(RecognitionResult recognitionResult)
         {
-            Dispatcher.Invoke((Action)delegate ()
+            Dispatcher.Invoke((Action)delegate
             {
                 MainWindow window = (MainWindow)Application.Current.MainWindow;
                 if (!recognitionResult.Succeeded)
@@ -182,6 +185,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                     window.Log("Request " + recognitionResult.RequestId + " error message: " + recognitionResult.FailureMsg);
                     return;
                 }
+
                 var identificationResult = recognitionResult.Value;
                 _identificationResultTxtBlk.Text = identificationResult.IdentifiedProfileId.ToString();
                 _identificationConfidenceTxtBlk.Text = identificationResult.Confidence.ToString();

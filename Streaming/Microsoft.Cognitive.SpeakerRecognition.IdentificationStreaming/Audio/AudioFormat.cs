@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="AudioFormat.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,20 +30,19 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using System.Text;
-using System;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
+    using System;
+    using System.Text;
+
     /// <summary>
     /// Audio codec and container format
     /// </summary>
     public class AudioFormat
     {
         /// <summary>
-        /// Constructs new audio format object
+        /// Initializes a new instance of the AudioFormat class.
         /// </summary>
         /// <param name="encoding">Audio encoding</param>
         /// <param name="channelsNumber">Channels number</param>
@@ -51,35 +51,17 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         /// <param name="audioContainer">Type of audio container, either RAW or WAV</param>
         public AudioFormat(AudioEncoding encoding, int channelsNumber, int sampleRate, int bitsPerSample, AudioContainer audioContainer)
         {
-            ValidateAudioFormat(channelsNumber, sampleRate, bitsPerSample);
+            this.ValidateAudioFormat(channelsNumber, sampleRate, bitsPerSample);
 
-            Encoding = encoding;
-            ChannelsNumber = channelsNumber;
-            SampleRate = sampleRate;
-            BitsPerSample = bitsPerSample;
-            Container = audioContainer;           
-        }
-
-        private void ValidateAudioFormat(int channelsNumber, int sampleRate, int bitsPerSample)
-        {
-            if(channelsNumber <= 0)
-            {
-                throw new ArgumentException("Channels number must be a positive number.");
-            }
-
-            if (sampleRate <= 0)
-            {
-                throw new ArgumentException("Sample rate must be a positive number.");
-            }
-
-            if (bitsPerSample <= 0)
-            {
-                throw new ArgumentException("Bits per sample must be a positive number.");
-            }
+            this.Encoding = encoding;
+            this.ChannelsNumber = channelsNumber;
+            this.SampleRate = sampleRate;
+            this.BitsPerSample = bitsPerSample;
+            this.Container = audioContainer;           
         }
 
         /// <summary>
-        /// Audio encoding
+        /// Gets or sets audio encoding
         /// </summary>
         public AudioEncoding Encoding
         {
@@ -88,7 +70,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         }
 
         /// <summary>
-        /// Channels number
+        /// Gets or sets channels number
         /// </summary>
         public int ChannelsNumber
         {
@@ -97,7 +79,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         }
 
         /// <summary>
-        /// Sample rate
+        /// Gets or sets sample rate
         /// </summary>
         public int SampleRate
         {
@@ -106,9 +88,18 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         }
 
         /// <summary>
-        /// Bits per sample
+        /// Gets or sets bits per sample
         /// </summary>
         public int BitsPerSample
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets audio container
+        /// </summary>
+        public AudioContainer Container
         {
             get;
             set;
@@ -129,29 +120,38 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
             AudioFormat format = obj as AudioFormat;
 
             return format != null &&
-                Encoding.Equals(format.Encoding) &&
-                ChannelsNumber == format.ChannelsNumber &&
-                SampleRate == format.SampleRate &&
-                BitsPerSample == format.BitsPerSample &&
-                Container.Equals(format.Container);
-        }
-
-        /// <summary>
-        /// Audio container
-        /// </summary>
-        public AudioContainer Container
-        {
-            get;
-            set;
+                this.Encoding.Equals(format.Encoding) &&
+                this.ChannelsNumber == format.ChannelsNumber &&
+                this.SampleRate == format.SampleRate &&
+                this.BitsPerSample == format.BitsPerSample &&
+                this.Container.Equals(format.Container);
         }
 
         /// <summary>
         /// Returns description of audio format
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A string representation for the object's fields</returns>
         public override string ToString()
         {
-            return "Container: " + Container.ContainerType.ToString() + ", Encoding: " + Encoding.ToString() + ", Rate: " + SampleRate + ", Sample Format: " + BitsPerSample + ", Channels: " + ChannelsNumber;
+            return "Container: " + this.Container.ContainerType.ToString() + ", Encoding: " + this.Encoding.ToString() + ", Rate: " + this.SampleRate + ", Sample Format: " + this.BitsPerSample + ", Channels: " + this.ChannelsNumber;
+        }
+
+        private void ValidateAudioFormat(int channelsNumber, int sampleRate, int bitsPerSample)
+        {
+            if (channelsNumber <= 0)
+            {
+                throw new ArgumentException("Channels number must be a positive number.");
+            }
+
+            if (sampleRate <= 0)
+            {
+                throw new ArgumentException("Sample rate must be a positive number.");
+            }
+
+            if (bitsPerSample <= 0)
+            {
+                throw new ArgumentException("Bits per sample must be a positive number.");
+            }
         }
     }
 }

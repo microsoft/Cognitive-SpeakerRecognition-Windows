@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="RecognitionClient.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,15 +30,14 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
 {
     using System;    
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Threading;
+    using System.Threading.Tasks;
     using Audio;
     using Microsoft.ProjectOxford.SpeakerRecognition;
     using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
@@ -50,20 +50,19 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
     /// </summary>
     public class RecognitionClient : IDisposable
     {
+        private readonly int defaultDelayBetweenRequests = 250;
+
         private AudioProcessor audioProcessor;
         private int requestID;
-        IdentificationClient idClient;
+        private IdentificationClient idClient;
 
-        private readonly int DefaultDelayBetweenRequests = 250;
-
-        private CancellationTokenSource RequestingTaskCancelletionTokenSource;
-        private Task RequestingTask;
-        private AudioFormatHandler AudioFormatHandler;
+        private CancellationTokenSource requestingTaskCancelletionTokenSource;
+        private Task requestingTask;
+        private AudioFormatHandler audioFormatHandler;
         private SpeakerIdentificationServiceClient serviceClient;
-
-
+        
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the RecognitionClient class.
         /// </summary>
         /// <param name="clientId">ID associated with all requests related to this client</param>
         /// <param name="speakerIds">Speaker IDs for identification</param>
@@ -80,20 +79,21 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
             this.WindowSize = windowSize;
             this.requestID = 0;
             this.AudioFormat = audioFormat;
-            this.AudioFormatHandler = new AudioFormatHandler(audioFormat);
+            this.audioFormatHandler = new AudioFormatHandler(audioFormat);
             this.serviceClient = serviceClient;
 
-            audioProcessor = new AudioProcessor(this.WindowSize, this.StepSize, this.AudioFormatHandler);
-            idClient = new IdentificationClient(this.SpeakerIds, resultCallback);
+            this.audioProcessor = new AudioProcessor(this.WindowSize, this.StepSize, this.audioFormatHandler);
+            this.idClient = new IdentificationClient(this.SpeakerIds, resultCallback);
 
-            this.RequestingTaskCancelletionTokenSource = new CancellationTokenSource();
-            this.RequestingTask = Task.Run(async () => {
-                await SendingRequestsTask(RequestingTaskCancelletionTokenSource.Token).ConfigureAwait(false);
+            this.requestingTaskCancelletionTokenSource = new CancellationTokenSource();
+            this.requestingTask = Task.Run(async () => 
+            {
+                await SendingRequestsTask(requestingTaskCancelletionTokenSource.Token).ConfigureAwait(false);
             });
         }
 
         /// <summary>
-        /// ID associated with all requests related to this client
+        /// Gets or sets ID associated with all requests related to this client
         /// </summary>
         public Guid ClientId
         {
@@ -101,7 +101,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         }
 
         /// <summary>
-        /// Speaker IDs for identification
+        /// Gets or sets speaker IDs for identification
         /// </summary>
         public Guid[] SpeakerIds
         {
@@ -109,7 +109,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         }
 
         /// <summary>
-        /// Step size in seconds
+        /// Gets or sets step size in seconds
         /// </summary>
         public int StepSize
         {
@@ -117,7 +117,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         }
 
         /// <summary>
-        /// Number of seconds sent per request
+        /// Gets or sets number of seconds sent per request
         /// </summary>
         public int WindowSize
         {
@@ -125,7 +125,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         }
 
         /// <summary>
-        /// Recognition audio format
+        /// Gets or sets recognition audio format
         /// </summary>
         public AudioFormat AudioFormat
         {
@@ -140,7 +140,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// <param name="length">The length of audio that should be streamed starting from the offset position</param>
         public async Task StreamAudioAsync(byte[] audioBytes, int offset, int length)
         {
-            await audioProcessor.AppendAsync(audioBytes, offset, length).ConfigureAwait(false);
+            await this.audioProcessor.AppendAsync(audioBytes, offset, length).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -148,33 +148,50 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         /// </summary>
         public async Task EndStreamAudioAsync()
         {
-            await audioProcessor.CompleteAsync().ConfigureAwait(false);
+            await this.audioProcessor.CompleteAsync().ConfigureAwait(false);
+        }        
+
+        /// <summary>
+        /// Disposes the client
+        /// </summary>
+        public void Dispose()
+        {
+            if (!this.audioProcessor.IsCompleted)
+            {
+                // If audio processor hasn't been completed yet,
+                // cancel the requesting task first.
+                this.requestingTaskCancelletionTokenSource.Cancel();
+            }
+
+            this.requestingTask.Wait();
         }
 
         private async Task SendingRequestsTask(CancellationToken token)
         {
-            while(!token.IsCancellationRequested)
+            while (!token.IsCancellationRequested)
             {
-                var audio = await audioProcessor.GetNextRequestAsync().ConfigureAwait(false);
-                if(audio != null)
+                var audio = await this.audioProcessor.GetNextRequestAsync().ConfigureAwait(false);
+                if (audio != null)
                 {
-                    int reqId = GetCurrentRequestId();
+                    int reqId = this.GetCurrentRequestId();
 
-                    var forgettableTask = Task.Run(async () => {
-                        using (var stream = new MemoryStream(audio)){
+                    var forgettableTask = Task.Run(async () =>
+                    {
+                        using (var stream = new MemoryStream(audio))
+                        {
                             await idClient.IdentifyStreamAsync(stream, this.serviceClient, this.ClientId, reqId).ConfigureAwait(false);
                         }
-                    }); 
+                    });
                 }
                 else
                 {
-                    if(audioProcessor.IsCompleted)
+                    if (this.audioProcessor.IsCompleted)
                     {
                         break;
                     }
                 }
 
-                await Task.Delay(DefaultDelayBetweenRequests).ConfigureAwait(false);
+                await Task.Delay(this.defaultDelayBetweenRequests).ConfigureAwait(false);
             }
         }
 
@@ -182,20 +199,5 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
         {
             return Interlocked.Increment(ref this.requestID);
         }
-
-        /// <summary>
-        /// Disposes the client
-        /// </summary>
-        public void Dispose()
-        {
-            if (!audioProcessor.IsCompleted)
-            {
-                // If audio processor hasn't been completed yet,
-                // cancel the requesting task first.
-                this.RequestingTaskCancelletionTokenSource.Cancel();
-            }
-            this.RequestingTask.Wait();
-        }
-
     }
 }

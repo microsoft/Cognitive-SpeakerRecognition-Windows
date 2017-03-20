@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="RecognitionResult.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,25 +30,24 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using Microsoft.ProjectOxford.SpeakerRecognition;
-using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using Microsoft.ProjectOxford.SpeakerRecognition;
+    using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
+
     /// <summary>
     /// Recognition result which includes the ID of the client initiated the request, the ID of the request and the identification result for the request
     /// </summary>
     public class RecognitionResult
     {
         /// <summary>
-        /// Construct a result object for a successful recognition
+        /// Initializes a new instance of the RecognitionResult class incase of a successful recognition
         /// </summary>
         /// <param name="result">Operation result</param>
         /// <param name="clientId">Client ID</param>
@@ -62,7 +62,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
         }
 
         /// <summary>
-        /// Construct a result object for a failed recognition
+        /// Initializes a new instance of the RecognitionResult class incase of a failed recognition
         /// </summary>
         /// <param name="status">Flag that Indicates whether the request has succeeded or not</param>
         /// <param name="failureMsg">Failure message in case of a failure</param>
@@ -107,7 +107,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result
         }
 
         /// <summary>
-        /// Failure message in case of a failure
+        /// Gets and Sets failure message in case of a failure
         /// </summary>
         public string FailureMsg
         {

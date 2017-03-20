@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="AudioHeaderParsingResult.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,23 +30,22 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Results of parsing an audio file header
     /// </summary>
     internal class AudioHeaderParsingResult
     {
         /// <summary>
-        /// The start position of data chunck
+        /// Gets or sets the start position of data chunck
         /// </summary>
         public int DataChunckStart
         {
@@ -53,7 +53,7 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
         }
 
         /// <summary>
-        /// Number of bytes per second
+        /// Gets or sets number of bytes per second
         /// </summary>
         public int NumberofBytesPerSecond
         {
