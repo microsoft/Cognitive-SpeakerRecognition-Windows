@@ -71,7 +71,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             {
                 window.Log("Creating Speaker Profile...");
                 CreateProfileResponse creationResponse = await this.serviceClient.CreateProfileAsync(_localeCmb.Text).ConfigureAwait(false);
-                window.Log("Speaker Profile Created.");
+                window.Log("Speaker Profile Created: " + creationResponse.ProfileId + ".");
                 window.Log("Retrieving The Created Profile...");
                 Profile profile = await this.serviceClient.GetProfileAsync(creationResponse.ProfileId).ConfigureAwait(false);
                 window.Log("Speaker Profile Retrieved.");
@@ -126,7 +126,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 using (Stream audioStream = File.OpenRead(this.selectedFile))
                 {
                     this.selectedFile = string.Empty;
-                    processPollingLocation = await this.serviceClient.EnrollAsync(audioStream, selectedProfiles[0].ProfileId).ConfigureAwait(false);
+                    processPollingLocation = await this.serviceClient.EnrollAsync(audioStream, selectedProfiles[0].ProfileId, ((sender as Button) == _enrollShortAudioBtn)).ConfigureAwait(false);
                 }
 
                 EnrollmentOperation enrollmentResult;
@@ -155,7 +155,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                     throw new EnrollmentException("Enrollment operation timeout.");
                 }
 
-                window.Log("Enrollment Done.");
+                window.Log("Speaker Profile Id: " + selectedProfiles[0].ProfileId + " Enrollment Done.");
 
                 await SpeakersListPage.SpeakersList.UpdateAllSpeakersAsync();
             }
@@ -169,9 +169,15 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             }
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            SpeakersListPage.SpeakersList.SetSingleSelectionMode();
+            Dispatcher.Invoke(async delegate
+            {
+                MainWindow window = (MainWindow)Application.Current.MainWindow;
+                this.serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
+                await SpeakersListPage.SpeakersList.UpdateAllSpeakersAsync().ConfigureAwait(false);
+                SpeakersListPage.SpeakersList.SetSingleSelectionMode();
+            });            
         }
     }
 }

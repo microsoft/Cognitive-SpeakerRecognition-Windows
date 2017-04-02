@@ -87,6 +87,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         {
             try
             {
+                UpdateServiceClient();
                 this.LogToMainWindow("Retrieving All Profiles...");
                 Profile[] allProfiles = await this.serviceClient.GetProfilesAsync().ConfigureAwait(false);
                 this.LogToMainWindow("All Profiles Retrieved.");
@@ -135,6 +136,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         /// <returns>An array of the selected identification profiles</returns>
         public Profile[] GetSelectedProfiles()
         {
+            UpdateServiceClient();
             if (this._speakersListView.SelectedItems.Count == 0)
             {
                 throw new Exception("No Speakers Selected.");
@@ -163,17 +165,17 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             });
         }
 
-        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        private void UpdateServiceClient()
         {
-            if (this.speakersLoaded == false)
+            Dispatcher.Invoke((Action)delegate
             {
-                Dispatcher.Invoke((Action)delegate
-                {
-                    MainWindow window = (MainWindow)Application.Current.MainWindow;
-                    this.serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
-                });
-                await this.UpdateAllSpeakersAsync().ConfigureAwait(false);
-            }
+                MainWindow window = (MainWindow)Application.Current.MainWindow;
+                this.serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
+            });
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
         }
     }
 }

@@ -41,6 +41,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Input;
     using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
     using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client;
     using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
@@ -56,6 +57,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         private string selectedFile = string.Empty;
 
         private SpeakerIdentificationServiceClient serviceClient;
+        private RecognitionClient recognitionClient;
 
         /// <summary>
         /// Initializes a new instance of the StreamPage class
@@ -94,9 +96,17 @@ namespace SPIDIdentificationStreaming_WPF_Samples
 
             try
             {
+                if(_windowSzBx.Text == string.Empty)
+                {
+                    throw new Exception("No window size was entered.");
+                }
                 // Window size in seconds
                 int windowSize = int.Parse(_windowSzBx.Text);
 
+                if (_stepSzBx.Text == string.Empty)
+                {
+                    throw new Exception("No step size was entered.");
+                }
                 // Amount of seconds needed for sending a request to server
                 // If set to 1, the client will send a request to the server for every second recieved from the user
                 // If set to 2, the client will send a request to the server for every 2 seconds recieved from the user
@@ -108,17 +118,18 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 if (this.selectedFile == string.Empty)
                 {
                     throw new Exception("No File Selected.");
-                }                    
-
-                window.Log("Processing File...");
-                this.DisplayAudio();
+                } 
 
                 Profile[] selectedProfiles = SpeakersListPage.SpeakersList.GetSelectedProfiles();
                 Guid[] testProfileIds = new Guid[selectedProfiles.Length];
                 for (int i = 0; i < testProfileIds.Length; i++)
                 {
                     testProfileIds[i] = selectedProfiles[i].ProfileId;
+                    window.Log("Speaker Profile Id: " + testProfileIds[i] + " has been selected for streaming.");
                 }
+
+                window.Log("Processing File...");
+                this.DisplayAudio();
 
                 // Unique id of the recognition client. Returned in the callback to relate results with clients in case of having several clients using the same callback
                 var recognitionClientId = Guid.NewGuid();
@@ -132,7 +143,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                     // Client factory is used to create a recognition client
                     // Recognition client can be used for one audio only. In case of having several audios, a separate client should be created for each one
                     var clientfactory = new ClientFactory();
-                    using (var recognitionClient = clientfactory.CreateRecognitionClient(recognitionClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this.serviceClient))
+                    using (recognitionClient = clientfactory.CreateRecognitionClient(recognitionClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this.serviceClient))
                     {
                         var chunkSize = 32000;
                         var buffer = new byte[chunkSize];
@@ -175,6 +186,20 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             mediaPlayer.Volume = (double)volumeSlider.Value;
         }
 
+        private void OnMouseDownStopMedia(object sender, MouseButtonEventArgs args)
+        {
+            this.StopPlayer();
+        }
+
+        private void StopPlayer()
+        {
+            mediaPlayer.Stop();
+            if (recognitionClient != null)
+            {
+                recognitionClient.EndStreamAudioAsync().ConfigureAwait(false);
+            }
+        }
+
         private void WriteResults(RecognitionResult recognitionResult)
         {
             Dispatcher.Invoke((Action)delegate
@@ -190,15 +215,26 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 _identificationResultTxtBlk.Text = identificationResult.IdentifiedProfileId.ToString();
                 _identificationConfidenceTxtBlk.Text = identificationResult.Confidence.ToString();
                 _identificationRequestIdTxtBlk.Text = recognitionResult.RequestId.ToString();
-                window.Log("Request " + recognitionResult.RequestId + ": Profile id: " + identificationResult.IdentifiedProfileId);
+                var result = identificationResult.IdentifiedProfileId == Guid.Empty ? "Unknown" : identificationResult.IdentifiedProfileId.ToString();
+                window.Log("Request " + recognitionResult.RequestId + ": Profile id: " + result);
 
                 _identificationResultStckPnl.Visibility = Visibility.Visible;
             });
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            SpeakersListPage.SpeakersList.SetMultipleSelectionMode();
+            Dispatcher.Invoke(async delegate
+            {
+                MainWindow window = (MainWindow)Application.Current.MainWindow;
+                this.serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
+                await SpeakersListPage.SpeakersList.UpdateAllSpeakersAsync().ConfigureAwait(false);
+                SpeakersListPage.SpeakersList.SetSingleSelectionMode();
+            });
+        }
+        private void Page_UnLoaded(object sender, RoutedEventArgs e)
+        {
+            this.StopPlayer();
         }
     }
 }
