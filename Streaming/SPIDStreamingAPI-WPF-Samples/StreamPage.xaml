@@ -23,7 +23,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.75*"/>
             <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition Width="0.1*"/>
+            <ColumnDefinition Width="0.15*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5, 5, 0, 0" FontWeight="Bold">Identify File</TextBlock>
         <Frame x:Name="_speakersListFrame" Grid.Row="1" Grid.Column="0" Grid.RowSpan="9" Margin="5, 5, 0, 0" NavigationUIVisibility="Hidden"/>

@@ -40,8 +40,8 @@
             <TextBlock TextWrapping="WrapWithOverflow" TextAlignment="Center">Add</TextBlock>
         </Button>
         <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 25, 0, 0" FontWeight="Bold">Step 2: Enroll Profile</TextBlock>
-        <TextBlock Grid.Row="5" Grid.Column="1" Margin="5, 5, 0, 0">Select a profile from the list on the left to enroll it.</TextBlock>
-        <TextBlock Grid.Row="6" Grid.Column="1"  Margin="5, 7, 0, 0">Click [Load File] to specify a file to enroll with.</TextBlock>
+        <TextBlock Grid.Row="5" Grid.Column="1" Margin="5, 5, 0, 0"><Span Foreground="Red">*</Span> Select a profile from the list on the left to enroll it.</TextBlock>
+        <TextBlock Grid.Row="6" Grid.Column="1"  Margin="5, 7, 0, 0"><Span Foreground="Red">*</Span> Click [Load File] to specify a file to enroll with.</TextBlock>
         <Button x:Name="_loadFileBtn" Grid.Row="6" Grid.Column="2" Margin="5, 5, 5, 0" Click="_loadFileBtn_Click">
             <TextBlock TextWrapping="WrapWithOverflow" TextAlignment="Center">Load File</TextBlock>
         </Button>
