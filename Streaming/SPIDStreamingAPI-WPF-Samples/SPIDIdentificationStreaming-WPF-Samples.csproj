@@ -166,9 +166,9 @@
       <Project>{735929f0-f8f1-4d93-b027-5d034fa7892b}</Project>
       <Name>SampleUserControlLibrary</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming\Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.csproj">
+    <ProjectReference Include="..\Microsoft.Cognitive.SpeakerRecognition.Streaming\Microsoft.Cognitive.SpeakerRecognition.Streaming.csproj">
       <Project>{8a58e960-8d3b-4da7-a111-270af62fe812}</Project>
-      <Name>Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming</Name>
+      <Name>Microsoft.Cognitive.SpeakerRecognition.Streaming</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

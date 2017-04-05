@@ -1,4 +1,4 @@
-﻿// <copyright file="AudioSpecifications.cs" company="Microsoft">
+﻿// <copyright file="AudioHeaderParsingResult.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
 // </copyright>
 // Licensed under the MIT license.
@@ -31,7 +31,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
+namespace  Microsoft.Cognitive.SpeakerRecognition.Streaming.Audio
 {
     using System;
     using System.Collections.Generic;
@@ -40,18 +40,24 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Types of audio encoding
+    /// Results of parsing an audio file header
     /// </summary>
-    public enum AudioEncoding
+    internal class AudioHeaderParsingResult
     {
         /// <summary>
-        /// Default value
+        /// Gets or sets the start position of data chunck
         /// </summary>
-        None = -1,
+        public int DataChunckStart
+        {
+            get; set;
+        }
 
         /// <summary>
-        /// PCM
+        /// Gets or sets number of bytes per second
         /// </summary>
-        PCM = 0
+        public int NumberofBytesPerSecond
+        {
+            get; set;
+        }
     }
 }

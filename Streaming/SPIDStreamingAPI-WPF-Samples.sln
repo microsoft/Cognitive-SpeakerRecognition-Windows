@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPIDIdentificationStreaming
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleUserControlLibrary", "..\Cognitive-Common-Windows\SampleUserControlLibrary\SampleUserControlLibrary.csproj", "{735929F0-F8F1-4D93-B027-5D034FA7892B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming", "Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming\Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.csproj", "{8A58E960-8D3B-4DA7-A111-270AF62FE812}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Cognitive.SpeakerRecognition.Streaming", "Microsoft.Cognitive.SpeakerRecognition.Streaming\Microsoft.Cognitive.SpeakerRecognition.Streaming.csproj", "{8A58E960-8D3B-4DA7-A111-270AF62FE812}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

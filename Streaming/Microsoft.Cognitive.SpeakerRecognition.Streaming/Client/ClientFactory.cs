@@ -31,11 +31,11 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Client
+namespace  Microsoft.Cognitive.SpeakerRecognition.Streaming.Client
 {
     using System;
-    using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio;
-    using Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Result;
+    using  Microsoft.Cognitive.SpeakerRecognition.Streaming.Audio;
+    using  Microsoft.Cognitive.SpeakerRecognition.Streaming.Result;
     using Microsoft.ProjectOxford.SpeakerRecognition;
     using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
 

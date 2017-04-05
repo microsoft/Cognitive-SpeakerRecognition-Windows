@@ -7,8 +7,8 @@
     <ProjectGuid>{8A58E960-8D3B-4DA7-A111-270AF62FE812}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming</RootNamespace>
-    <AssemblyName>Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming</AssemblyName>
+    <RootNamespace>Microsoft.Cognitive.SpeakerRecognition.Streaming</RootNamespace>
+    <AssemblyName>Microsoft.Cognitive.SpeakerRecognition.Streaming</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\Microsoft.Cognitive.SpeakerRecognition.Streaming.xml</DocumentationFile>
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -50,7 +50,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\x64\Release\Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.xml</DocumentationFile>
+    <DocumentationFile>bin\x64\Release\Microsoft.Cognitive.SpeakerRecognition.Streaming.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.ProjectOxford.SpeakerRecognition, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

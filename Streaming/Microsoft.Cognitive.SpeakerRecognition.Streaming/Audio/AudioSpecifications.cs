@@ -1,4 +1,4 @@
-﻿// <copyright file="AudioContainer.cs" company="Microsoft">
+﻿// <copyright file="AudioSpecifications.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
 // </copyright>
 // Licensed under the MIT license.
@@ -31,7 +31,7 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
+namespace  Microsoft.Cognitive.SpeakerRecognition.Streaming.Audio
 {
     using System;
     using System.Collections.Generic;
@@ -40,72 +40,18 @@ namespace Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.Audio
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Types of audio containers
+    /// Types of audio encoding
     /// </summary>
-    public enum AudioContainerType
+    public enum AudioEncoding
     {
         /// <summary>
-        /// Audio with no header
+        /// Default value
         /// </summary>
-        RAW,
+        None = -1,
 
         /// <summary>
-        /// WAV audio
+        /// PCM
         /// </summary>
-        WAV
-    }
-
-    /// <summary>
-    /// Audio container which supports two types of containers: RAW and WAV
-    /// </summary>
-    public class AudioContainer
-    {
-        private int maxHeaderSize;
-
-        /// <summary>
-        /// Initializes a new instance of the AudioContainer class.
-        /// </summary>
-        /// <param name="type">Audio container type</param>
-        public AudioContainer(AudioContainerType type)
-        {
-            this.ContainerType = type;
-
-            if (type.Equals(AudioContainerType.WAV))
-            {
-                this.maxHeaderSize = 5000;
-            }                
-            else if (type.Equals(AudioContainerType.RAW))
-            {
-                this.maxHeaderSize = 0;
-            }                
-        }
-
-        /// <summary>
-        /// Gets or sets audio container type
-        /// </summary>
-        public AudioContainerType ContainerType
-        {
-            get;
-            set;
-        }
-
-        internal int MaxHeaderSize
-        {
-            get
-            {
-                return this.maxHeaderSize;
-            }            
-        }
-
-        public override bool Equals(object obj)
-        {
-            AudioContainer container = obj as AudioContainer;
-            if (this.ContainerType.Equals(container.ContainerType))
-            {
-                return true;
-            }
-                
-            return false;
-        }
+        PCM = 0
     }
 }

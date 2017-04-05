@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming")]
+[assembly: AssemblyTitle(" Microsoft.Cognitive.SpeakerRecognition.Streaming")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming")]
+[assembly: AssemblyProduct(" Microsoft.Cognitive.SpeakerRecognition.Streaming")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -35,4 +35,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-//[assembly: InternalsVisibleTo(" Microsoft.Cognitive.SpeakerRecognition.IdentificationStreaming.UnitTest")]
+//[assembly: InternalsVisibleTo("  Microsoft.Cognitive.SpeakerRecognition.Streaming.UnitTest")]
