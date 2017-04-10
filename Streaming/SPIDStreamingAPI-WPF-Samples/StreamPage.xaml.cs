@@ -212,7 +212,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 }
 
                 var identificationResult = recognitionResult.Value;
-                _identificationResultTxtBlk.Text = identificationResult.IdentifiedProfileId.ToString();
+                _identificationResultTxtBlk.Text = identificationResult.IdentifiedProfileId == Guid.Empty ? "Unknown" : identificationResult.IdentifiedProfileId.ToString();
                 _identificationConfidenceTxtBlk.Text = identificationResult.Confidence.ToString();
                 _identificationRequestIdTxtBlk.Text = recognitionResult.RequestId.ToString();
                 var result = identificationResult.IdentifiedProfileId == Guid.Empty ? "Unknown" : identificationResult.IdentifiedProfileId.ToString();

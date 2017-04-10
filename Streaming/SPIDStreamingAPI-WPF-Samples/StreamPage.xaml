@@ -18,6 +18,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -26,24 +27,23 @@
             <ColumnDefinition Width="0.15*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5, 5, 0, 0" FontWeight="Bold">Identify File</TextBlock>
-        <Frame x:Name="_speakersListFrame" Grid.Row="1" Grid.Column="0" Grid.RowSpan="9" Margin="5, 5, 0, 0" NavigationUIVisibility="Hidden"/>
-        <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" FontWeight="Bold">Step 1: Select Test File</TextBlock>
-        <TextBlock Grid.Row="2" Grid.Column="1" Margin="5, 7, 0, 0">Please click [Load File] to identify the speaker.</TextBlock>
-        <Button x:Name="_loadFileBtn" Grid.Row="2" Grid.Column="2" Margin="5, 5, 5, 0" Content="_Load File" Click="_loadFileBtn_Click"/>
-        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 25, 0, 0" FontWeight="Bold">Step 2: Perform Identification</TextBlock>
-        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0"><Span Foreground="Red">*</Span> Select some profiles from the list on the left to identify from.</TextBlock>
+        <Frame x:Name="_speakersListFrame" Grid.Row="1" Grid.Column="0" Grid.RowSpan="10" Margin="5, 5, 0, 0" NavigationUIVisibility="Hidden"/>
+        <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" TextWrapping="Wrap" Foreground="Red" FontStyle="Italic">For more information about the number of requests per streamed audio file, refere to "Streaming Audio File" sub-section in the Readme.md.</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" FontWeight="Bold">Step 1: Select Test File</TextBlock>
+        <TextBlock Grid.Row="3" Grid.Column="1" Margin="5, 7, 0, 0">Please click [Load File] to identify the speaker.</TextBlock>
+        <Button x:Name="_loadFileBtn" Grid.Row="3" Grid.Column="2" Margin="5, 5, 5, 0" Content="_Load File" Click="_loadFileBtn_Click"/>
+        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 25, 0, 0" FontWeight="Bold">Step 2: Perform Identification</TextBlock>
+        <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0"><Span Foreground="Red">*</Span> Select some profiles from the list on the left to identify from.</TextBlock>
 
-        <TextBlock Grid.Row="5" Grid.Column="1" Margin="5, 7, 0, 0"><Span Foreground="Red">*</Span> Enter the window size.</TextBlock>
-        <TextBox x:Name="_windowSzBx" Grid.Row="5" Grid.Column="2" Margin="5, 5, 5, 0" />
-        <TextBlock Grid.Row="6" Grid.Column="1" Margin="5, 7, 0, 0"><Span Foreground="Red">*</Span> Enter the step size.</TextBlock>
-        <TextBox x:Name="_stepSzBx" Grid.Row="6" Grid.Column="2" Margin="5, 5, 5, 0" />
+        <TextBlock Grid.Row="6" Grid.Column="1" Margin="5, 7, 0, 0"><Span Foreground="Red">*</Span> Enter the window size.</TextBlock>
+        <TextBox x:Name="_windowSzBx" Grid.Row="6" Grid.Column="2" Margin="5, 5, 5, 0" />
+        <TextBlock Grid.Row="7" Grid.Column="1" Margin="5, 7, 0, 0"><Span Foreground="Red">*</Span> Enter the step size.</TextBlock>
+        <TextBox x:Name="_stepSzBx" Grid.Row="7" Grid.Column="2" Margin="5, 5, 5, 0" />
 
-        <TextBlock Grid.Row="7" Grid.Column="1" Margin="5, 7, 0, 0">Click [Stream] to perform the Streaming.</TextBlock>
-        <Button x:Name="_streamBtn" Grid.Row="7" Grid.Column="2" Margin="5, 5, 5, 0" Content="_stream" Click="_streamBtn_Click" />
-        <StackPanel Grid.Row="8" Grid.Column="1" Height="20">
-        </StackPanel>
+        <TextBlock Grid.Row="8" Grid.Column="1" Margin="5, 7, 0, 0">Click [Stream] to perform the Streaming.</TextBlock>
+        <Button x:Name="_streamBtn" Grid.Row="8" Grid.Column="2" Margin="5, 5, 5, 0" Content="_stream" Click="_streamBtn_Click" />
 
-        <StackPanel Background="Black" Grid.Row="8" Grid.Column="1" x:Name="_mediaElementStckPnl" Visibility="Hidden" Margin="5, 25, 5, 5" >
+        <StackPanel Background="Black" Grid.Row="9" Grid.Column="1" x:Name="_mediaElementStckPnl" Visibility="Hidden" Margin="5, 25, 5, 5" >
 
             <!-- To interactively stop, pause, and play the media, the LoadedBehavior 
            property of the MediaElement must be set to "Manual". -->
@@ -61,7 +61,7 @@
             </StackPanel>
         </StackPanel>
 
-        <StackPanel x:Name="_identificationResultStckPnl" Grid.Row="9" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
+        <StackPanel x:Name="_identificationResultStckPnl" Grid.Row="10" Grid.Column="1" Grid.ColumnSpan="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
 
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="5, 5, 0, 0">Identified speaker:</TextBlock>

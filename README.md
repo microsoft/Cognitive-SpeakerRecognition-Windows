@@ -6,7 +6,8 @@ This repo contains the Windows client library & sample for the Microsoft Speaker
 
 
 ## The sample
-The sample is a Windows WPF application to demonstrate the use of Speaker Recognition API. It demonstrates the speaker identification and speaker verification features.
+The sample is a Windows WPF application to demonstrate the use of Speaker Recognition API. It demonstrates the speaker identification and speaker verification features. 
+Also, it demonstarates the way to stream audio and the usage of identification features in identifying speakers contributing in this streamed audio.
 
 ### Build the sample
  1. Starting in the folder where you clone the repository (this folder)
@@ -15,8 +16,10 @@ The sample is a Windows WPF application to demonstrate the use of Speaker Recogn
  4. Start Microsoft Visual Studio 2015 and select `File > Open > Project/Solution`.
  5. For speaker identification, starting in the folder where you clone the repository, go to
     `SpeakerRecognition > Windows > Identification` folder.
-    For speaker identification, starting in the folder where you clone the repository, go to
+    For speaker verification, starting in the folder where you clone the repository, go to
     `SpeakerRecognition > Windows > Verification` folder.
+    For speaker steaming, starting in the folder where you clone the repository, go to
+    `SpeakerRecognition > Windows > Streaming` folder.
  6. Double-click the Visual Studio 2015 Solution (.sln) file.
  7. Press Ctrl+Shift+B, or select `Build > Build Solution`.
 
@@ -34,6 +37,17 @@ follow the instructions on screen.
 Microsoft will receive the audio files you upload and may use them to improve
 Speaker Recognition API and related services. By submitting an audio, you confirm
 you have consent from everyone in it.
+
+### Streaming Audio File
+ 1. Starting in the "Stream File" Window, Press "Load File" button and load your audio file.
+ 2. Select the profiles of the speakers who should contribute in the identification process
+     during streaming the audio.
+ 3. Control number of look-back seconds included with each newly-streamed second to be identified
+     through tunning the "widnow size".
+ 4. Control the number of requests sent in streaming your audio through tunning the "step size".
+     If the step size is x, then you identify streamed seconds every other x seconds.
+ 5. Press "stream" button and wait for the results of the streaming process.
+
 
 
 ## Contributing
