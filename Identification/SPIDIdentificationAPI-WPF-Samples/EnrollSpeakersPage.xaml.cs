@@ -164,7 +164,13 @@ namespace SPIDIdentificationAPI_WPF_Samples
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            SpeakersListPage.SpeakersList.SetSingleSelectionMode();
+            Dispatcher.Invoke(async delegate
+            {
+                MainWindow window = (MainWindow)Application.Current.MainWindow;
+                _serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
+                await SpeakersListPage.SpeakersList.UpdateAllSpeakersAsync().ConfigureAwait(false);
+                SpeakersListPage.SpeakersList.SetSingleSelectionMode();
+            });
         }
     }
 }

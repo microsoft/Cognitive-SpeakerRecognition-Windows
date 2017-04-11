@@ -16,8 +16,10 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Speaker ID" DisplayMemberBinding="{Binding ProfileId}"/>
+                    <GridViewColumn Header="Locale" DisplayMemberBinding="{Binding Locale}"/>
                     <GridViewColumn Header="Enrollment Status" DisplayMemberBinding="{Binding EnrollmentStatus}"/>
                     <GridViewColumn Header="Remaining Enrollment Time" DisplayMemberBinding="{Binding RemainingEnrollmentSpeechSeconds}"/>
+                    <GridViewColumn Header="Last Action DateTime" DisplayMemberBinding="{Binding LastActionDateTime}"/>
                 </GridView>
             </ListView.View>
         </ListView>

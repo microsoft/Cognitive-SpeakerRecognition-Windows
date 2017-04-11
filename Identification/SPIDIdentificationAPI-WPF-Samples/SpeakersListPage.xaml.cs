@@ -83,6 +83,8 @@ namespace SPIDIdentificationAPI_WPF_Samples
         /// <returns>Task to track the status of the asynchronous task.</returns>
         public async Task UpdateAllSpeakersAsync()
         {
+            UpdateServiceClient();
+
             MainWindow window = (MainWindow)Application.Current.MainWindow;
             try
             {
@@ -131,6 +133,8 @@ namespace SPIDIdentificationAPI_WPF_Samples
         /// <returns>An array of the selected identification profiles</returns>
         public Profile[] GetSelectedProfiles()
         {
+            UpdateServiceClient();
+
             if (_speakersListView.SelectedItems.Count == 0)
                 throw new Exception("No Speakers Selected.");
             Profile[] result = new Profile[_speakersListView.SelectedItems.Count];
@@ -139,14 +143,17 @@ namespace SPIDIdentificationAPI_WPF_Samples
             return result;
         }
 
-        private async void Page_Loaded(object sender, RoutedEventArgs e)
+        private void UpdateServiceClient()
         {
-            if (_speakersLoaded == false)
+            Dispatcher.Invoke((Action)delegate
             {
                 MainWindow window = (MainWindow)Application.Current.MainWindow;
                 _serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
-                await UpdateAllSpeakersAsync();
-            }
+            });
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
