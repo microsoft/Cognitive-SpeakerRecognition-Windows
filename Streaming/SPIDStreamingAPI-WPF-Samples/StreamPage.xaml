@@ -28,7 +28,7 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5, 5, 0, 0" FontWeight="Bold">Identify File</TextBlock>
         <Frame x:Name="_speakersListFrame" Grid.Row="1" Grid.Column="0" Grid.RowSpan="10" Margin="5, 5, 0, 0" NavigationUIVisibility="Hidden"/>
-        <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" TextWrapping="Wrap" Foreground="Red" FontStyle="Italic">For more information about the number of requests per streamed audio file, refere to "Streaming Audio File" sub-section in the Readme.md.</TextBlock>
+        <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" TextWrapping="Wrap" Foreground="Red" FontStyle="Italic">For more information about the number of requests issued per audio file, refer to "Streaming Audio File" sub-section in the Readme.md.</TextBlock>
         <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" FontWeight="Bold">Step 1: Select Test File</TextBlock>
         <TextBlock Grid.Row="3" Grid.Column="1" Margin="5, 7, 0, 0">Please click [Load File] to identify the speaker.</TextBlock>
         <Button x:Name="_loadFileBtn" Grid.Row="3" Grid.Column="2" Margin="5, 5, 5, 0" Content="_Load File" Click="_loadFileBtn_Click"/>
@@ -41,7 +41,7 @@
         <TextBox x:Name="_stepSzBx" Grid.Row="7" Grid.Column="2" Margin="5, 5, 5, 0" />
 
         <TextBlock Grid.Row="8" Grid.Column="1" Margin="5, 7, 0, 0">Click [Stream] to perform the Streaming.</TextBlock>
-        <Button x:Name="_streamBtn" Grid.Row="8" Grid.Column="2" Margin="5, 5, 5, 0" Content="_stream" Click="_streamBtn_Click" />
+        <Button x:Name="_streamBtn" Grid.Row="8" Grid.Column="2" Margin="5, 5, 5, 0" Content="_Stream" Click="_streamBtn_Click" />
 
         <StackPanel Background="Black" Grid.Row="9" Grid.Column="1" x:Name="_mediaElementStckPnl" Visibility="Hidden" Margin="5, 25, 5, 5" >
 

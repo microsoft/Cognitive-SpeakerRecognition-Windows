@@ -6,8 +6,9 @@ This repo contains the Windows client library & sample for the Microsoft Speaker
 
 
 ## The sample
-The sample is a Windows WPF application to demonstrate the use of Speaker Recognition API. It demonstrates the speaker identification and speaker verification features. 
-Also, it demonstarates the way to stream audio and the usage of identification features in identifying speakers contributing in this streamed audio.
+The sample includes three applications:
+ 1. two Windows WPF applications to demonstrate the use of identification and verification features of Speaker Recognition API for single-speaker short audios.
+ 2. a Windows WPF application to demonstrate an approach to use identification on potentially longer audios that contain multiple speakers by streaming a few seconds at a time.
 
 ### Build the sample
  1. Starting in the folder where you clone the repository (this folder)
@@ -28,7 +29,7 @@ After the build is complete, press F5 to run the sample.
 
 First, you must obtain a Speaker Recognition API subscription key by [following the instructions on our website](<https://www.microsoft.com/cognitive-services/en-us/sign-up>).
 
-Locate the text edit box saying "Paste your subscription key here to start". Paste your subscription key. You can choose to persist your subscription key in your machine by clicking "Save Key" button. When you want to delete the subscription key from the
+Locate the text edit box saying "Paste your subscription key here to start". Paste your subscription key. You can choose to persist your subscription key in your machine by clicking the "Save Key" button. When you want to delete the subscription key from the 
 machine, click "Delete Key" to remove it from your machine.
 
 Click on "Select Scenario" to use samples of different scenarios, and
@@ -39,14 +40,12 @@ Speaker Recognition API and related services. By submitting an audio, you confir
 you have consent from everyone in it.
 
 ### Streaming Audio File
- 1. Starting in the "Stream File" Window, Press "Load File" button and load your audio file.
- 2. Select the profiles of the speakers who should contribute in the identification process
-     during streaming the audio.
- 3. Control number of look-back seconds included with each newly-streamed second to be identified
-     through tunning the "widnow size".
- 4. Control the number of requests sent in streaming your audio through tunning the "step size".
-     If the step size is x, then you identify streamed seconds every other x seconds.
- 5. Press "stream" button and wait for the results of the streaming process.
+ 1. Start with the "Enroll Speakers" scenario to prepare the speakers you will identify against.
+ 2. In the "Stream File" scenario, Press "Load File" button and load your audio file.
+ 3. Select the profiles  you want to use as candidate speakers.
+ 4. Control the number of seconds used with each identification request by tuning the "window size".
+ 5. Control the number of seconds between each identification request through tuning the "step size".
+ 6. Press "stream" button and monitor the results of the streaming process.
 
 
 
