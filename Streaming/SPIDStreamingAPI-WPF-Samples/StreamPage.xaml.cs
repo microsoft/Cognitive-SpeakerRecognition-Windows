@@ -59,6 +59,9 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         private SpeakerIdentificationServiceClient serviceClient;
         private RecognitionClient recognitionClient;
 
+        Task streamingTask;
+        CancellationTokenSource tokenSource;
+
         /// <summary>
         /// Initializes a new instance of the StreamPage class
         /// </summary>
@@ -90,6 +93,45 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             this.selectedFile = openFileDialog.FileName;
         }
 
+        private async void StreamAudio(int windowSize, int stepSize, Guid[] testProfileIds, CancellationToken token)
+        {
+            // Delay between passing audio chunks to the client in milliseconds
+            int requestDelay = int.Parse(ConfigurationManager.AppSettings["RequestsDelay"]);
+
+            // Unique id of the recognition client. Returned in the callback to relate results with clients in case of having several clients using the same callback
+            var recognitionClientId = Guid.NewGuid();
+
+            // Audio format of the recognition audio
+            // Supported containers: WAV and RAW (no header)
+            // Supported format: Encoding = PCM, Channels = Mono (1), Rate = 16k, Bits per sample = 16
+            var audioFormat = new AudioFormat(AudioEncoding.PCM, 1, 16000, 16, new AudioContainer(AudioContainerType.WAV));
+            using (Stream audioStream = File.OpenRead(this.selectedFile))
+            {
+                // Client factory is used to create a recognition client
+                // Recognition client can be used for one audio only. In case of having several audios, a separate client should be created for each one
+                var clientfactory = new ClientFactory();
+                using (var recognitionClient = clientfactory.CreateRecognitionClient(recognitionClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this.serviceClient))
+                {
+                    var chunkSize = 32000;
+                    var buffer = new byte[chunkSize];
+                    var bytesRead = 0;
+
+                    while ((bytesRead = audioStream.Read(buffer, 0, buffer.Length)) > 0 && !token.IsCancellationRequested)
+                    {
+                        // You can send any number of bytes not limited to 1 second
+                        // If the remaining bytes of the last request are smaller than 1 second, it gets ignored
+                        await recognitionClient.StreamAudioAsync(buffer, 0, bytesRead).ConfigureAwait(false);
+                      
+                        // Simulates live streaming
+                        // It's recommended to use a one second delay to guarantee receiving responses in the correct order
+                        await Task.Delay(requestDelay).ConfigureAwait(false);
+                    }
+
+                    await recognitionClient.EndStreamAudioAsync().ConfigureAwait(false);
+                }
+            }
+        }
+
         private async void _streamBtn_Click(object sender, RoutedEventArgs e)
         {
             MainWindow window = (MainWindow)Application.Current.MainWindow;
@@ -110,10 +152,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 // Amount of seconds needed for sending a request to server
                 // If set to 1, the client will send a request to the server for every second recieved from the user
                 // If set to 2, the client will send a request to the server for every 2 seconds recieved from the user
-                int stepSize = int.Parse(_stepSzBx.Text);
-
-                // Delay between passing audio chunks to the client in milliseconds
-                int requestDelay = int.Parse(ConfigurationManager.AppSettings["RequestsDelay"]);
+                int stepSize = int.Parse(_stepSzBx.Text);                
 
                 if (this.selectedFile == string.Empty)
                 {
@@ -131,38 +170,11 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 window.Log("Processing File...");
                 this.DisplayAudio();
 
-                // Unique id of the recognition client. Returned in the callback to relate results with clients in case of having several clients using the same callback
-                var recognitionClientId = Guid.NewGuid();
+                tokenSource = new CancellationTokenSource();
+                var ct = tokenSource.Token;
 
-                // Audio format of the recognition audio
-                // Supported containers: WAV and RAW (no header)
-                // Supported format: Encoding = PCM, Channels = Mono (1), Rate = 16k, Bits per sample = 16
-                var audioFormat = new AudioFormat(AudioEncoding.PCM, 1, 16000, 16, new AudioContainer(AudioContainerType.WAV));
-                using (Stream audioStream = File.OpenRead(this.selectedFile))
-                {
-                    // Client factory is used to create a recognition client
-                    // Recognition client can be used for one audio only. In case of having several audios, a separate client should be created for each one
-                    var clientfactory = new ClientFactory();
-                    using (recognitionClient = clientfactory.CreateRecognitionClient(recognitionClientId, testProfileIds, stepSize, windowSize, audioFormat, this.WriteResults, this.serviceClient))
-                    {
-                        var chunkSize = 32000;
-                        var buffer = new byte[chunkSize];
-                        var bytesRead = 0;
-
-                        while ((bytesRead = audioStream.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            // You can send any number of bytes not limited to 1 second
-                            // If the remaining bytes of the last request are smaller than 1 second, it gets ignored
-                            await recognitionClient.StreamAudioAsync(buffer, 0, bytesRead).ConfigureAwait(false);
-
-                            // Simulates live streaming
-                            // It's recommended to use a one second delay to guarantee receiving responses in the correct order
-                            await Task.Delay(requestDelay).ConfigureAwait(false);
-                        }
-
-                        await recognitionClient.EndStreamAudioAsync().ConfigureAwait(false);
-                    }
-                }
+                streamingTask = Task.Factory.StartNew(() => StreamAudio(windowSize, stepSize, testProfileIds, ct));
+                streamingTask.Wait();
             }
             catch (IdentificationException ex)
             {
@@ -194,10 +206,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
         private void StopPlayer()
         {
             mediaPlayer.Stop();
-            if (recognitionClient != null)
-            {
-                recognitionClient.EndStreamAudioAsync().ConfigureAwait(false);
-            }
+            tokenSource?.Cancel();
         }
 
         private void WriteResults(RecognitionResult recognitionResult)
