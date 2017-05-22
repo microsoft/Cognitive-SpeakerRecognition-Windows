@@ -6,7 +6,9 @@ This repo contains the Windows client library & sample for the Microsoft Speaker
 
 
 ## The sample
-The sample is a Windows WPF application to demonstrate the use of Speaker Recognition API. It demonstrates the speaker identification and speaker verification features.
+The sample includes three applications:
+ 1. two Windows WPF applications to demonstrate the use of identification and verification features of Speaker Recognition API for single-speaker short audios.
+ 2. a Windows WPF application to demonstrate an approach to use identification on potentially longer audios that contain multiple speakers by streaming a few seconds at a time.
 
 ### Build the sample
  1. Starting in the folder where you clone the repository (this folder)
@@ -15,8 +17,10 @@ The sample is a Windows WPF application to demonstrate the use of Speaker Recogn
  4. Start Microsoft Visual Studio 2015 and select `File > Open > Project/Solution`.
  5. For speaker identification, starting in the folder where you clone the repository, go to
     `SpeakerRecognition > Windows > Identification` folder.
-    For speaker identification, starting in the folder where you clone the repository, go to
+    For speaker verification, starting in the folder where you clone the repository, go to
     `SpeakerRecognition > Windows > Verification` folder.
+    For speaker steaming, starting in the folder where you clone the repository, go to
+    `SpeakerRecognition > Windows > Streaming` folder.
  6. Double-click the Visual Studio 2015 Solution (.sln) file.
  7. Press Ctrl+Shift+B, or select `Build > Build Solution`.
 
@@ -25,7 +29,7 @@ After the build is complete, press F5 to run the sample.
 
 First, you must obtain a Speaker Recognition API subscription key by [following the instructions on our website](<https://www.microsoft.com/cognitive-services/en-us/sign-up>).
 
-Locate the text edit box saying "Paste your subscription key here to start". Paste your subscription key. You can choose to persist your subscription key in your machine by clicking "Save Key" button. When you want to delete the subscription key from the
+Locate the text edit box saying "Paste your subscription key here to start". Paste your subscription key. You can choose to persist your subscription key in your machine by clicking the "Save Key" button. When you want to delete the subscription key from the 
 machine, click "Delete Key" to remove it from your machine.
 
 Click on "Select Scenario" to use samples of different scenarios, and
@@ -34,6 +38,20 @@ follow the instructions on screen.
 Microsoft will receive the audio files you upload and may use them to improve
 Speaker Recognition API and related services. By submitting an audio, you confirm
 you have consent from everyone in it.
+
+### Streaming Audio File
+ 1. Start with the "Enroll Speakers" scenario to prepare the speakers you will identify against.
+ 2. In the "Stream File" scenario, Press "Load File" button and load your audio file.
+ 3. Select the profiles  you want to use as candidate speakers.
+ 4. Control the number of seconds used with each identification request by tuning the "window size".
+ 5. Control the number of seconds between each identification request through tuning the "step size". 
+ 6. Press "Stream" button and monitor the results of the streaming process.
+ 
+ Note: 
+ Make sure that the number of requests per minute resulting from tunning the step size won't exceed your subscription's rate limit.
+ For example, applying a step size of 1 on an audio file of size 1 minute will result in 60 requests. Applying a step size of 2 on the same audio file will result in 30 requests.
+ For your convenience, we have provided sample audios to enroll 2 speakers and a sample audio for streaming. These audios are found under `SpeakerRecognition\Windows\Streaming\SPIDStreamingAPI-WPF-Samples\SampleAudios`.
+
 
 
 ## Contributing

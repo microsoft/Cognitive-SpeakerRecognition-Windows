@@ -1,5 +1,6 @@
-﻿// 
+﻿// <copyright file="EnrollSpeakersPage.xaml.cs" company="Microsoft">
 // Copyright (c) Microsoft. All rights reserved.
+// </copyright>
 // Licensed under the MIT license.
 // 
 // Microsoft Cognitive Services (formerly Project Oxford): https://www.microsoft.com/cognitive-services
@@ -29,40 +30,38 @@
 // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-// 
 
-using Microsoft.ProjectOxford.SpeakerRecognition;
-using Microsoft.ProjectOxford.SpeakerRecognition.Contract;
-using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-using Microsoft.Win32;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-
-namespace SPIDIdentificationAPI_WPF_Samples
+namespace SPIDIdentificationStreaming_WPF_Samples
 {
+    using System;
+    using System.IO;
+    using System.Threading.Tasks;
+    using System.Windows;
+    using System.Windows.Controls;
+    using Microsoft.ProjectOxford.SpeakerRecognition;
+    using Microsoft.ProjectOxford.SpeakerRecognition.Contract;
+    using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
+    using Microsoft.Win32;    
+
     /// <summary>
     /// Interaction logic for EnrollSpeakersPage.xaml
     /// </summary>
     public partial class EnrollSpeakersPage : Page
     {
-        private string _selectedFile = "";
-
-        private SpeakerIdentificationServiceClient _serviceClient;
+        private string selectedFile = string.Empty;
+        private SpeakerIdentificationServiceClient serviceClient;
 
         /// <summary>
-        /// Constructor to initialize the Enroll Speakers page
+        /// Initializes a new instance of the EnrollSpeakersPage class.
         /// </summary>
         public EnrollSpeakersPage()
         {
-            InitializeComponent();
+            this.InitializeComponent();
 
-            _speakersListFrame.Navigate(SpeakersListPage.SpeakersList);
+            this._speakersListFrame.Navigate(SpeakersListPage.SpeakersList);
 
             MainWindow window = (MainWindow)Application.Current.MainWindow;
-            _serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
+            this.serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
         }
 
         private async void _addBtn_Click(object sender, RoutedEventArgs e)
@@ -71,10 +70,10 @@ namespace SPIDIdentificationAPI_WPF_Samples
             try
             {
                 window.Log("Creating Speaker Profile...");
-                CreateProfileResponse creationResponse = await _serviceClient.CreateProfileAsync(_localeCmb.Text);
-                window.Log("Speaker Profile Created.");
+                CreateProfileResponse creationResponse = await this.serviceClient.CreateProfileAsync(_localeCmb.Text).ConfigureAwait(false);
+                window.Log("Speaker Profile Created: " + creationResponse.ProfileId + ".");
                 window.Log("Retrieving The Created Profile...");
-                Profile profile = await _serviceClient.GetProfileAsync(creationResponse.ProfileId);
+                Profile profile = await this.serviceClient.GetProfileAsync(creationResponse.ProfileId).ConfigureAwait(false);
                 window.Log("Speaker Profile Retrieved.");
                 SpeakersListPage.SpeakersList.AddSpeaker(profile);
             }
@@ -105,8 +104,9 @@ namespace SPIDIdentificationAPI_WPF_Samples
                 window.Log("No File Selected.");
                 return;
             }
+
             window.Log("File Selected: " + openFileDialog.FileName);
-            _selectedFile = openFileDialog.FileName;
+            this.selectedFile = openFileDialog.FileName;
         }
 
         private async void _enrollBtn_Click(object sender, RoutedEventArgs e)
@@ -114,26 +114,29 @@ namespace SPIDIdentificationAPI_WPF_Samples
             MainWindow window = (MainWindow)Application.Current.MainWindow;
             try
             {
-                if (_selectedFile == "")
+                if (this.selectedFile == string.Empty)
+                {
                     throw new Exception("No File Selected.");
+                }                    
 
                 window.Log("Enrolling Speaker...");
                 Profile[] selectedProfiles = SpeakersListPage.SpeakersList.GetSelectedProfiles();
 
                 OperationLocation processPollingLocation;
-                using (Stream audioStream = File.OpenRead(_selectedFile))
+                using (Stream audioStream = File.OpenRead(this.selectedFile))
                 {
-                    _selectedFile = "";
-                    processPollingLocation = await _serviceClient.EnrollAsync(audioStream, selectedProfiles[0].ProfileId, ((sender as Button) == _enrollShortAudioBtn));
+                    this.selectedFile = string.Empty;
+                    processPollingLocation = await this.serviceClient.EnrollAsync(audioStream, selectedProfiles[0].ProfileId, ((sender as Button) == _enrollShortAudioBtn)).ConfigureAwait(false);
                 }
 
                 EnrollmentOperation enrollmentResult;
                 int numOfRetries = 10;
                 TimeSpan timeBetweenRetries = TimeSpan.FromSeconds(5.0);
-                while(numOfRetries > 0)
+
+                while (numOfRetries > 0)
                 {
                     await Task.Delay(timeBetweenRetries);
-                    enrollmentResult = await _serviceClient.CheckEnrollmentStatusAsync(processPollingLocation);
+                    enrollmentResult = await this.serviceClient.CheckEnrollmentStatusAsync(processPollingLocation).ConfigureAwait(false);
 
                     if (enrollmentResult.Status == Status.Succeeded)
                     {
@@ -143,13 +146,17 @@ namespace SPIDIdentificationAPI_WPF_Samples
                     {
                         throw new EnrollmentException(enrollmentResult.Message);
                     }
+
                     numOfRetries--;
                 }
-                if(numOfRetries <= 0)
+
+                if (numOfRetries <= 0)
                 {
                     throw new EnrollmentException("Enrollment operation timeout.");
                 }
-                window.Log("Enrollment Done.");
+
+                window.Log("Speaker Profile Id: " + selectedProfiles[0].ProfileId + " Enrollment Done.");
+
                 await SpeakersListPage.SpeakersList.UpdateAllSpeakersAsync();
             }
             catch (EnrollmentException ex)
@@ -162,16 +169,15 @@ namespace SPIDIdentificationAPI_WPF_Samples
             }
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Dispatcher.Invoke(async delegate
             {
                 MainWindow window = (MainWindow)Application.Current.MainWindow;
-                _serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
+                this.serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
                 await SpeakersListPage.SpeakersList.UpdateAllSpeakersAsync().ConfigureAwait(false);
                 SpeakersListPage.SpeakersList.SetSingleSelectionMode();
-            });
+            });            
         }
     }
 }
-
