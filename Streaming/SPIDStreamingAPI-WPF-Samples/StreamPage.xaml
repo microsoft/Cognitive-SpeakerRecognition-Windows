@@ -28,13 +28,12 @@
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5, 5, 0, 0" FontWeight="Bold">Identify File</TextBlock>
         <Frame x:Name="_speakersListFrame" Grid.Row="1" Grid.Column="0" Grid.RowSpan="10" Margin="5, 5, 0, 0" NavigationUIVisibility="Hidden"/>
-        <TextBlock  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" TextWrapping="Wrap" Foreground="Red" FontStyle="Italic">For more information about the number of requests issued per audio file, refer to "Streaming Audio File" sub-section in the Readme.md.</TextBlock>
-        <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" FontWeight="Bold">Step 1: Select Test File</TextBlock>
-        <TextBlock Grid.Row="3" Grid.Column="1" Margin="5, 7, 0, 0">Please click [Load File] to identify the speaker.</TextBlock>
-        <Button x:Name="_loadFileBtn" Grid.Row="3" Grid.Column="2" Margin="5, 5, 5, 0" Content="_Load File" Click="_loadFileBtn_Click"/>
-        <TextBlock Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 25, 0, 0" FontWeight="Bold">Step 2: Perform Identification</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" FontWeight="Bold">Step 1: Select Test File</TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="1" Margin="5, 7, 0, 0">Please click [Load File] to identify the speaker.</TextBlock>
+        <Button x:Name="_loadFileBtn" Grid.Row="2" Grid.Column="2" Margin="5, 5, 5, 0" Content="_Load File" Click="_loadFileBtn_Click"/>
+        <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 25, 0, 0" FontWeight="Bold">Step 2: Perform Identification</TextBlock>
+        <TextBlock  Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0" TextWrapping="Wrap" Foreground="Red" FontStyle="Italic">To understand the impact of window size and step size on the number of requests issued, please refer to "Streaming Audio File" sub-section in the Readme.md.</TextBlock>
         <TextBlock Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="5, 5, 0, 0"><Span Foreground="Red">*</Span> Select some profiles from the list on the left to identify from.</TextBlock>
-
         <TextBlock Grid.Row="6" Grid.Column="1" Margin="5, 7, 0, 0"><Span Foreground="Red">*</Span> Enter the window size.</TextBlock>
         <TextBox x:Name="_windowSzBx" Grid.Row="6" Grid.Column="2" Margin="5, 5, 5, 0" />
         <TextBlock Grid.Row="7" Grid.Column="1" Margin="5, 7, 0, 0"><Span Foreground="Red">*</Span> Enter the step size.</TextBlock>

@@ -44,8 +44,13 @@ you have consent from everyone in it.
  2. In the "Stream File" scenario, Press "Load File" button and load your audio file.
  3. Select the profiles  you want to use as candidate speakers.
  4. Control the number of seconds used with each identification request by tuning the "window size".
- 5. Control the number of seconds between each identification request through tuning the "step size".
- 6. Press "stream" button and monitor the results of the streaming process.
+ 5. Control the number of seconds between each identification request through tuning the "step size". 
+ 6. Press "Stream" button and monitor the results of the streaming process.
+ 
+ Note: 
+ Make sure that the number of requests per minute resulting from tunning the step size won't exceed your subscription's rate limit.
+ For example, applying a step size of 1 on an audio file of size 1 minute will result in 60 requests. Applying a step size of 2 on the same audio file will result in 30 requests.
+ For your convenience, we have provided sample audios to enroll 2 speakers and a sample audio for streaming. These audios are found under `SpeakerRecognition\Windows\Streaming\SPIDStreamingAPI-WPF-Samples\SampleAudios`.
 
 
 
