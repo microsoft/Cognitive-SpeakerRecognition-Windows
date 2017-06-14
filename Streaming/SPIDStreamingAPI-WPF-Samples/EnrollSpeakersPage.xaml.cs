@@ -41,7 +41,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
     using Microsoft.ProjectOxford.SpeakerRecognition;
     using Microsoft.ProjectOxford.SpeakerRecognition.Contract;
     using Microsoft.ProjectOxford.SpeakerRecognition.Contract.Identification;
-    using Microsoft.Win32;    
+    using Microsoft.Win32;
 
     /// <summary>
     /// Interaction logic for EnrollSpeakersPage.xaml
@@ -69,25 +69,25 @@ namespace SPIDIdentificationStreaming_WPF_Samples
             MainWindow window = (MainWindow)Application.Current.MainWindow;
             try
             {
-                window.Log("Creating Speaker Profile...");
+                LogToMainWindow("Creating Speaker Profile...");
                 CreateProfileResponse creationResponse = await this.serviceClient.CreateProfileAsync(_localeCmb.Text).ConfigureAwait(false);
-                window.Log("Speaker Profile Created: " + creationResponse.ProfileId + ".");
-                window.Log("Retrieving The Created Profile...");
+                LogToMainWindow("Speaker Profile Created: " + creationResponse.ProfileId + ".");
+                LogToMainWindow("Retrieving The Created Profile...");
                 Profile profile = await this.serviceClient.GetProfileAsync(creationResponse.ProfileId).ConfigureAwait(false);
-                window.Log("Speaker Profile Retrieved.");
+                LogToMainWindow("Speaker Profile Retrieved.");
                 SpeakersListPage.SpeakersList.AddSpeaker(profile);
             }
             catch (CreateProfileException ex)
             {
-                window.Log("Profile Creation Error: " + ex.Message);
+                LogToMainWindow("Profile Creation Error: " + ex.Message);
             }
             catch (GetProfileException ex)
             {
-                window.Log("Error Retrieving The Profile: " + ex.Message);
+                LogToMainWindow("Error Retrieving The Profile: " + ex.Message);
             }
             catch (Exception ex)
             {
-                window.Log("Error: " + ex.Message);
+                LogToMainWindow("Error: " + ex.Message);
             }
         }
 
@@ -101,11 +101,11 @@ namespace SPIDIdentificationStreaming_WPF_Samples
 
             if (!(bool)result)
             {
-                window.Log("No File Selected.");
+                LogToMainWindow("No File Selected.");
                 return;
             }
 
-            window.Log("File Selected: " + openFileDialog.FileName);
+            LogToMainWindow("File Selected: " + openFileDialog.FileName);
             this.selectedFile = openFileDialog.FileName;
         }
 
@@ -117,9 +117,9 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 if (this.selectedFile == string.Empty)
                 {
                     throw new Exception("No File Selected.");
-                }                    
+                }
 
-                window.Log("Enrolling Speaker...");
+                LogToMainWindow("Enrolling Speaker...");
                 Profile[] selectedProfiles = SpeakersListPage.SpeakersList.GetSelectedProfiles();
 
                 OperationLocation processPollingLocation;
@@ -155,18 +155,27 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                     throw new EnrollmentException("Enrollment operation timeout.");
                 }
 
-                window.Log("Speaker Profile Id: " + selectedProfiles[0].ProfileId + " Enrollment Done.");
+                LogToMainWindow("Speaker Profile Id: " + selectedProfiles[0].ProfileId + " Enrollment Done.");
 
                 await SpeakersListPage.SpeakersList.UpdateAllSpeakersAsync();
             }
             catch (EnrollmentException ex)
             {
-                window.Log("Enrollment Error: " + ex.Message);
+                LogToMainWindow("Enrollment Error: " + ex.Message);
             }
             catch (Exception ex)
             {
-                window.Log("Error: " + ex.Message);
+                LogToMainWindow("Error: " + ex.Message);
             }
+        }
+
+        private void LogToMainWindow(string logString)
+        {
+            Dispatcher.Invoke((Action)delegate
+            {
+                MainWindow window = (MainWindow)Application.Current.MainWindow;
+                window.Log(logString);
+            });
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -177,7 +186,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 this.serviceClient = new SpeakerIdentificationServiceClient(window.ScenarioControl.SubscriptionKey);
                 await SpeakersListPage.SpeakersList.UpdateAllSpeakersAsync().ConfigureAwait(false);
                 SpeakersListPage.SpeakersList.SetSingleSelectionMode();
-            });            
+            });
         }
     }
 }
