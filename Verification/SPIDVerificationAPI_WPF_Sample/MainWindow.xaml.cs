@@ -74,7 +74,7 @@ namespace SPIDVerificationAPI_WPF_Sample
         {
             InitializeComponent();
             _scenariosControl.SampleTitle = "Speaker Verification Sample";
-            _scenariosControl.Disclaimer = "Microsoft will receive the audio files you upload and may use them to improve Speaker Recognition API and related services. By submitting an audio, you confirm you have consent from everyone in it.";
+            _scenariosControl.Disclaimer = string.Empty;
             _scenariosControl.SampleScenarioList = new Scenario[]
             {
                 new Scenario { Title = "Scenario 1: Make a new Enrollment", PageClass=typeof(EnrollPage)},

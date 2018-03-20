@@ -35,10 +35,6 @@ machine, click "Delete Key" to remove it from your machine.
 Click on "Select Scenario" to use samples of different scenarios, and
 follow the instructions on screen.
 
-Microsoft will receive the audio files you upload and may use them to improve
-Speaker Recognition API and related services. By submitting an audio, you confirm
-you have consent from everyone in it.
-
 ### Streaming Audio File
  1. Start with the "Enroll Speakers" scenario to prepare the speakers you will identify against.
  2. In the "Stream File" scenario, Press "Load File" button and load your audio file.
@@ -69,7 +65,3 @@ All Microsoft Cognitive Services SDKs and samples are licensed with the MIT Lice
 [LICENSE](</LICENSE.md>).
 
 Sample images are licensed separately, please refer to [LICENSE-IMAGE](</LICENSE-IMAGE.md>).
-
-
-## Developer Code of Conduct
-Developers using Cognitive Services, including this client library & sample, are expected to follow the “Developer Code of Conduct for Microsoft Cognitive Services”, found at [http://go.microsoft.com/fwlink/?LinkId=698895](http://go.microsoft.com/fwlink/?LinkId=698895).

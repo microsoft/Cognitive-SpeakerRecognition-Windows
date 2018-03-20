@@ -55,7 +55,7 @@ namespace SPIDIdentificationStreaming_WPF_Samples
                 new Scenario{ Title = "Stream File", PageClass = typeof(StreamPage) },
             };
 
-            this._scenariosControl.Disclaimer = "Microsoft will receive the audio files you upload and may use them to improve Speaker Recognition API and related services. By submitting an audio, you confirm you have consent from everyone in it.";
+            this._scenariosControl.Disclaimer = string.Empty;
             this._scenariosControl.ClearLog();
         }
 

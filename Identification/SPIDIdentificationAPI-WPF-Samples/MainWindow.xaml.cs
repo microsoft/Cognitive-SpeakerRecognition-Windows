@@ -65,8 +65,8 @@ namespace SPIDIdentificationAPI_WPF_Samples
                 new Scenario{ Title = "Enroll Speakers", PageClass = typeof(EnrollSpeakersPage)},
                 new Scenario{ Title = "Identify File", PageClass = typeof(IdentifyFilePage)},
             };
-
-            _scenariosControl.Disclaimer = "Microsoft will receive the audio files you upload and may use them to improve Speaker Recognition API and related services. By submitting an audio, you confirm you have consent from everyone in it.";
+            
+            _scenariosControl.Disclaimer = string.Empty;
 
             _scenariosControl.ClearLog();
         }
