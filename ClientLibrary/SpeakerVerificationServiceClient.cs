@@ -160,7 +160,7 @@ namespace Microsoft.ProjectOxford.SpeakerRecognition
         {
             try
             {
-                var content = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString("u"));
+                var content = new MultipartFormDataContent("Upload----" + DateTime.Now.ToString("u").Replace(" ", ""));
                 content.Add(new StreamContent(audioStream), "verificationData", id.ToString("D") + "_" + DateTime.Now.ToString("u"));
 
                 var requestUrl = _VERIFY_ENDPOINT + "?verificationProfileId=" + id.ToString("D");
